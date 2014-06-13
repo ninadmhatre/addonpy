@@ -1,0 +1,13 @@
+{
+    "uuid": "EEA8B330-A999-4D9F-89AB-D341330B619F",
+    "name": "jaguar-cli",
+    "type": "1",
+    "description": "Thisishook_test1module",
+    "sequence": [
+        "start",
+        "stop"
+    ],
+    "version": "1.0.0",
+    "creator": "jugaur-team",
+    "help": "http: //somewebsite/<name>.html"
+}
