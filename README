@@ -1,0 +1,108 @@
+*
+* Readme for 'addonpy' 
+* 
+
+Description
+------------
+
+#
+# Note: I have not checked it with Threading!
+#
+
+This is simple addon / plugin framework in python for python files. This is pure python module. 
+Main purpose of 'addonpy' is to give developer simple addon /plugin interface
+- project specific config file to define addon location and functions to validate in each addon
+- comes with own run_manager, which can execute functions within addon in given order
+  - either configure with run_manger instance 
+  - or specify when executing particular addon
+  - or ask it to pick up from addon`s meta data
+- obviously, you can run individual functions as you want without run_manger
+  ** Note: make sure you run within try..except..finally block **
+  
+Works On
+---------
+I have tested it on below versions
+- 2.7.6
+- 3.4.1
+
+Addon Guidelines
+-----------------
+
+Naming:
+  - Use CamelCase
+  - Every Addon should have 'Addon' in name
+
+Organizing & Writing:
+  - Python file name and class name should be same!
+      e.g. LoadConfigAddon.py will have 'class LoadConfigAddon(IAddonInfo)'
+  - 1 Addon per file only!!
+  - Addon class should inherit from 'IAddonInfo'
+  - Do not use 'sys.exit(0)'!
+  - Always have 'start', 'execute', 'stop', '__addon__' & '__info__' functions
+  - You can specify your own function names with config file in your project
+    ** NOTE: Always have '__info__' & '__addon__' to get meta information **
+  
+Meta:
+  - No extra file for every module, all file meta is included in addon
+  - use __info__ function to define addon meta ( simple dictionary )
+    
+        meta = {
+            'uuid': '5b2dd0d5-2bbd-40a9-8250-c21167dbb822', # Not used
+            'name': 'FileIOAddon', # Addon name 
+            'type': '0', # Type of addon for __future__
+            'description': 'File IO related operations will be done with this addon',
+            'execution_seq': ['start', 'execute'], 
+            'stop_seq': ['stop'],
+            'version': '1.0.5',
+            'author': 'Ninad Mhatre',
+            'help_url': 'http://www.google.com/easydep/addon/FileIOAddon.html'
+        }
+    
+Usage
+------
+
+1. Get this module installed
+2. use it in main program 
+3. import modules 
+
+from AddonLoader import AddonLoader as loader
+from AddonLoader import AddonExecutor as runner
+
+4. Initialize loader 
+# Note : will user addon-loader.info file in current project to figure out addon locations
+loader_mgr = loader(verbose=True) 
+
+5. Load all addons
+loader_mgr.load_addons()
+
+6. Okay! Its time to run addons 
+# initialize runner with <execution> and <stop> sequence
+# exection_seq - runner will execute <addon>.start() -> <addon>.execute() first 
+# irrespecitive of above execution result 
+# runner with execute <addon>.stop() when above 2 finishes!
+
+run_mgr = runner(['start', 'execute'], ['stop'])
+
+# get instance of required addon
+
+7. Get instance of particular addon by its name
+cli = loader_mgr.get_instance('CommandLineAddon')
+
+8. print all addon info (__info__)
+cli.print_addon_info()
+
+9. this will run with run order specified while initializing run_manger 
+run_mgr.execute_with_default(cli)
+
+
+fileio = loader_mgr.get_instance('FileIOAddon')
+fileio.print_addon_info()
+
+10. Specify your own run order 
+run_mgr.execute_with_order(fileio, ['execute', 'start'], ['stop'])
+
+pingadd = loader_mgr.get_instance('PingAddon')
+pingadd.print_addon_info()
+
+11. Run with run order specified by addon it self...
+run_mgr.execute_with_config(pingadd)
