@@ -43,7 +43,15 @@ class LogModule(ILogger):
 # 1. Initialize addon loader with optional verbose & logger [not mentioned below]
 #    - If logger is not specified then default print will be used as <DateTime> <Level> <Message>
 #    - Verbose decides how much to log
-loader_mgr = loader(verbose=True, logger=LogModule())
+
+# first_run.txt
+loader_mgr = loader(verbose=True)
+
+# second_run.txt -> uncomment below and comment other 2
+# loader_mgr = loader(verbose=True, logger=PrintLogger())
+
+# third_run.txt -> uncomment below and comment other 2
+# loader_mgr = loader(verbose=True, logger=LogModule())
 
 # 2. Load all addons (scans & validates) [ Read more __doc__ on '__validate_addon' in AddonLoader ]
 loader_mgr.load_addons()
