@@ -1,0 +1,12 @@
+{ 
+    "uuid": "EEA8B330-A999-4D9F-89AB-D341330B619F",
+    "name": "CommandLineAddon",
+    "type": "1",
+    "os": ["linux", "win32"],
+    "description": "Command line addon for client, this is supposed to provide CLI validation",
+    "execution_seq": ["start", "execute"],
+    "stop_seq": ["stop"],
+    "version": "1.0.5",
+    "author": "juguar-team",
+    "help_url": "http://www.google.com/easydep/addon/CommandLineAddon.html" 
+}

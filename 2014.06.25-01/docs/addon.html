@@ -1,0 +1,218 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module addon</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>addon</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:///C:/users/ninad/pycharmprojects/plugable_arch/addon.py">c:\users\ninad\pycharmprojects\plugable_arch\addon.py</a></font></td></tr></table>
+    <p></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="json.html">json</a><br>
+</td><td width="25%" valign=top><a href="os.html">os</a><br>
+</td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="__builtin__.html#object">__builtin__.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="addon.html#AddonExecutor">AddonExecutor</a>
+</font></dt><dt><font face="helvetica, arial"><a href="addon.html#AddonLoader">AddonLoader</a>
+</font></dt><dt><font face="helvetica, arial"><a href="addon.html#ILogger">ILogger</a>
+</font></dt><dt><font face="helvetica, arial"><a href="addon.html#LoaderHelper">LoaderHelper</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="AddonExecutor">class <strong>AddonExecutor</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Addon&nbsp;Executor&nbsp;to&nbsp;run&nbsp;loaded&nbsp;addons&nbsp;in&nbsp;simple&nbsp;try..except&nbsp;block&nbsp;to&nbsp;make&nbsp;sure&nbsp;close&nbsp;action&nbsp;specific&nbsp;to&nbsp;addon&nbsp;is<br>
+always&nbsp;executed&nbsp;and&nbsp;simple&nbsp;interface&nbsp;to&nbsp;run&nbsp;modules<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="AddonExecutor-__init__"><strong>__init__</strong></a>(self, execute_order, stop_order)</dt><dd><tt>Initializer&nbsp;for&nbsp;class<br>
+:param&nbsp;execute_order:&nbsp;list,&nbsp;functions&nbsp;from&nbsp;addon&nbsp;to&nbsp;be&nbsp;executed<br>
+:param&nbsp;stop_order:&nbsp;list,&nbsp;functions&nbsp;from&nbsp;addon&nbsp;to&nbsp;be&nbsp;executed&nbsp;while&nbsp;stopping&nbsp;the&nbsp;addon<br>
+:return:&nbsp;void</tt></dd></dl>
+
+<dl><dt><a name="AddonExecutor-execute_with_config"><strong>execute_with_config</strong></a>(self, addon)</dt><dd><tt>execute&nbsp;addon&nbsp;functions&nbsp;with&nbsp;order&nbsp;specified&nbsp;in&nbsp;__info__&nbsp;section&nbsp;of&nbsp;addon<br>
+:param&nbsp;addon:&nbsp;addon&nbsp;instance<br>
+:return:&nbsp;void</tt></dd></dl>
+
+<dl><dt><a name="AddonExecutor-execute_with_default"><strong>execute_with_default</strong></a>(self, addon)</dt><dd><tt>execute&nbsp;addon&nbsp;methods&nbsp;with&nbsp;sequence&nbsp;specified&nbsp;while&nbsp;instantiating&nbsp;Executor&nbsp;class<br>
+:param&nbsp;addon:&nbsp;addon&nbsp;instance<br>
+:return:&nbsp;void</tt></dd></dl>
+
+<dl><dt><a name="AddonExecutor-execute_with_order"><strong>execute_with_order</strong></a>(self, addon, execute_order<font color="#909090">=None</font>, stop_order<font color="#909090">=None</font>)</dt><dd><tt>execute&nbsp;addon&nbsp;methods&nbsp;with&nbsp;sequence&nbsp;as&nbsp;passed&nbsp;to&nbsp;this&nbsp;function<br>
+:param&nbsp;addon:&nbsp;addon&nbsp;instance<br>
+:param&nbsp;execute_order:&nbsp;execution&nbsp;sequence&nbsp;like&nbsp;transaction<br>
+:param&nbsp;stop_order:&nbsp;stop&nbsp;sequence<br>
+:return:&nbsp;void<br>
+:raises:&nbsp;TypeError</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="AddonLoader">class <strong>AddonLoader</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Addon&nbsp;Loader&nbsp;class,&nbsp;scans,&nbsp;validates,&nbsp;loads&nbsp;the&nbsp;addons&nbsp;and&nbsp;used&nbsp;to&nbsp;get&nbsp;the&nbsp;instance&nbsp;of&nbsp;the&nbsp;addons<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="AddonLoader-__init__"><strong>__init__</strong></a>(self, verbose<font color="#909090">=False</font>, logger<font color="#909090">=None</font>)</dt><dd><tt>Initialize&nbsp;with&nbsp;optional&nbsp;verbose&nbsp;mode&nbsp;(print&nbsp;information)&nbsp;and&nbsp;optional&nbsp;logger&nbsp;(not&nbsp;implemented)<br>
+:param&nbsp;verbose:&nbsp;print&nbsp;loading&nbsp;information<br>
+:param&nbsp;logger:&nbsp;custom&nbsp;logger&nbsp;used&nbsp;in&nbsp;verbose&nbsp;mode<br>
+:return:&nbsp;void</tt></dd></dl>
+
+<dl><dt><a name="AddonLoader-get_instance"><strong>get_instance</strong></a>(self, addon)</dt><dd><tt>get&nbsp;instance&nbsp;of&nbsp;addon&nbsp;loaded&nbsp;by&nbsp;name<br>
+:param&nbsp;addon:&nbsp;addon&nbsp;name&nbsp;for&nbsp;which&nbsp;instance&nbsp;will&nbsp;be&nbsp;returned<br>
+:return:&nbsp;instance&nbsp;of&nbsp;loaded&nbsp;addon<br>
+:rtype:&nbsp;class&nbsp;instance<br>
+:raises:&nbsp;ImportWarning,&nbsp;NameError</tt></dd></dl>
+
+<dl><dt><a name="AddonLoader-load_addons"><strong>load_addons</strong></a>(self)</dt><dd><tt>Load&nbsp;addons&nbsp;from&nbsp;specified&nbsp;directories<br>
+-&nbsp;scan&nbsp;files<br>
+-&nbsp;load&nbsp;them<br>
+-&nbsp;validate&nbsp;for&nbsp;required&nbsp;methods<br>
+-&nbsp;load<br>
+:return:&nbsp;void&nbsp;(sets&nbsp;class&nbsp;level&nbsp;dict)</tt></dd></dl>
+
+<dl><dt><a name="AddonLoader-log"><strong>log</strong></a>(self, message, level<font color="#909090">='debug'</font>)</dt><dd><tt>log&nbsp;messages&nbsp;to&nbsp;console<br>
+:param&nbsp;message:&nbsp;message&nbsp;to&nbsp;log<br>
+:param&nbsp;level:&nbsp;message&nbsp;level,&nbsp;default:&nbsp;debug<br>
+:return:&nbsp;void</tt></dd></dl>
+
+<dl><dt><a name="AddonLoader-set_addon_dirs"><strong>set_addon_dirs</strong></a>(self, dirs)</dt><dd><tt>override&nbsp;the&nbsp;default&nbsp;config&nbsp;value&nbsp;to&nbsp;look&nbsp;for&nbsp;addons<br>
+:param&nbsp;dirs:&nbsp;directories&nbsp;to&nbsp;search&nbsp;for&nbsp;addons&nbsp;as&nbsp;list<br>
+:return:&nbsp;void<br>
+:raises:&nbsp;TypeError</tt></dd></dl>
+
+<dl><dt><a name="AddonLoader-set_logger"><strong>set_logger</strong></a>(self, logger)</dt></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="ILogger">class <strong>ILogger</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Use&nbsp;this&nbsp;as&nbsp;a&nbsp;base&nbsp;class&nbsp;for&nbsp;logger&nbsp;module&nbsp;while&nbsp;and&nbsp;override&nbsp;all&nbsp;methods<br>
+in&nbsp;class&nbsp;with&nbsp;each&nbsp;mapping&nbsp;to&nbsp;proper&nbsp;levels&nbsp;in&nbsp;your&nbsp;logger.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="ILogger-debug"><strong>debug</strong></a>(self, message)</dt><dd><tt>log&nbsp;debug&nbsp;messages<br>
+:return:&nbsp;void</tt></dd></dl>
+
+<dl><dt><a name="ILogger-error"><strong>error</strong></a>(self, message)</dt><dd><tt>log&nbsp;errors&nbsp;messages<br>
+:return:&nbsp;void</tt></dd></dl>
+
+<dl><dt><a name="ILogger-fatal"><strong>fatal</strong></a>(self, message)</dt><dd><tt>log&nbsp;fatal&nbsp;messages<br>
+:return:&nbsp;void</tt></dd></dl>
+
+<dl><dt><a name="ILogger-trace"><strong>trace</strong></a>(self, message)</dt><dd><tt>log&nbsp;trace&nbsp;messages<br>
+:return:&nbsp;void</tt></dd></dl>
+
+<dl><dt><a name="ILogger-warn"><strong>warn</strong></a>(self, message)</dt><dd><tt>log&nbsp;warning&nbsp;messages<br>
+:return:&nbsp;void</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="LoaderHelper">class <strong>LoaderHelper</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Small&nbsp;utility&nbsp;class&nbsp;to&nbsp;read&nbsp;json&nbsp;and&nbsp;info&nbsp;files<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Static methods defined here:<br>
+<dl><dt><a name="LoaderHelper-parse_info_file"><strong>parse_info_file</strong></a>(filename)</dt><dd><tt>parse&nbsp;.info&nbsp;file&nbsp;for&nbsp;addon<br>
+:param&nbsp;filename:&nbsp;absolute&nbsp;file&nbsp;path&nbsp;to&nbsp;read<br>
+:return:&nbsp;info&nbsp;file&nbsp;contents<br>
+:rtype:&nbsp;dict</tt></dd></dl>
+
+<dl><dt><a name="LoaderHelper-parse_json"><strong>parse_json</strong></a>(file_contents)</dt><dd><tt>parse&nbsp;json&nbsp;string<br>
+:param&nbsp;file_contents:&nbsp;string&nbsp;with&nbsp;json&nbsp;data<br>
+:return:&nbsp;dict&nbsp;with&nbsp;parsed&nbsp;data<br>
+:rtype:&nbsp;dict<br>
+:raises:&nbsp;ValueError</tt></dd></dl>
+
+<dl><dt><a name="LoaderHelper-read_file"><strong>read_file</strong></a>(file_name)</dt><dd><tt>read&nbsp;file&nbsp;and&nbsp;return&nbsp;string<br>
+:param&nbsp;file_name:&nbsp;file&nbsp;to&nbsp;read&nbsp;with&nbsp;absolute&nbsp;path<br>
+:return:&nbsp;file&nbsp;contents&nbsp;as&nbsp;string<br>
+:rtype:&nbsp;str</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-load_source"><strong>load_source</strong></a>(...)</dt></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>__author__</strong> = 'Ninad'</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#7799ee">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Author</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#7799ee"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Ninad</td></tr></table>
+</body></html>
