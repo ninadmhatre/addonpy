@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <title>addonpy by ninadmhatre</title>
+  </head>
+
+  <body>
+    <header>
+      <div class="inner">
+        <h1>addonpy</h1>
+        <h2>a addon/plug-in framework for python</h2>
+        <a href="https://github.com/ninadmhatre/addonpy" class="button"><small>View project on</small>GitHub</a>
+      </div>
+    </header>
+
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h1>
+<a name="description" class="anchor" href="#description"><span class="octicon octicon-link"></span></a>Description</h1>
+
+<p>"addonpy" is a python module to provide addon / plug-in like functionality. This is simple addon interface provider.</p>
+
+<h1>
+<a name="assumptions--guidelines" class="anchor" href="#assumptions--guidelines"><span class="octicon octicon-link"></span></a>Assumptions / Guidelines</h1>
+
+<ol>
+<li>It will scan directory(ies) to look for file Addon.py or Addon.info 
+
+<ol>
+<li>You can specify multiple locations in addon-loader.info file [<em>each project can have its own loader.info file</em>]</li>
+<li>You can explicitly set addon folders before scanning for addons.</li>
+</ol>
+</li>
+<li>Directories to search can be configured in code, or specified in "info" file and package it with your application.</li>
+<li>Every "addon" must have some common functions which will be called. 
+
+<ol>
+<li>
+<em>by default, expected functions are 'start', 'execute', 'stop', '__info_</em>' &amp; '__addon__'. </li>
+<li>Function names can be configured using "<a href="https://github.com/ninadmhatre/addonpy/blob/master/2014.06.20-01/example/addon-loader.info">info</a>" file. </li>
+</ol>
+</li>
+<li>Every file must have '__info__' function which returns 'meta' information about the addon.
+
+<ol>
+<li>Even if .info file is used to get this information, please duplicate it to support both modes.</li>
+</ol>
+</li>
+<li>"addonpy" can be started in "verbose" mode to log the information, and if you are using your own logger make sure you wrap it up with "<a href="https://github.com/ninadmhatre/addonpy/blob/master/2014.06.20-01/example/consumer.py#L21">dummy logger class</a>"</li>
+</ol><h2>
+<a name="description-1" class="anchor" href="#description-1"><span class="octicon octicon-link"></span></a>Description</h2>
+
+<blockquote>
+<p>Note: I have not checked it with Threading! Threading should be handled within addon.</p>
+</blockquote>
+
+<p>This is simple addon / plugin framework in python for python files. This is pure python module. 
+Main purpose of 'addonpy' is to give developer simple addon /plugin interface</p>
+
+<ul>
+<li>project specific config file to define addon location and functions to validate in each addon</li>
+<li>comes with own run_manager, which can execute functions within addon in given order
+
+<ul>
+<li>either configure with run_manger instance </li>
+<li>or specify when executing particular addon</li>
+<li>or ask it to pick up from addon`s meta data</li>
+</ul>
+</li>
+<li>obviously, you can run individual functions as you want without run_manger
+** Note: make sure you run within try..except..finally block **</li>
+</ul><h2>
+<a name="works-on" class="anchor" href="#works-on"><span class="octicon octicon-link"></span></a>Works On</h2>
+
+<p>I have tested it on below OS`es &amp; Python versions</p>
+
+<p><strong>Windows 7</strong> : 2.7.5+, 3.4.1</p>
+
+<p><strong>Linux RH5</strong> : 2.6.6, 2.7.5+, 3.4.1</p>
+
+<h2>
+<a name="addon-guidelines" class="anchor" href="#addon-guidelines"><span class="octicon octicon-link"></span></a>Addon Guidelines</h2>
+
+<p><strong>Naming:</strong></p>
+
+<ul>
+<li>Use CamelCase</li>
+<li>Every addon should have 'Addon' in name like SomethingAddon.py/info </li>
+</ul><p><strong>Organizing &amp; Writing:</strong></p>
+
+<ul>
+<li>Python file name and class name should be same!
+  e.g. LoadConfigAddon.py will have 'class LoadConfigAddon(IAddonInfo)'</li>
+<li>Only one addon per file.</li>
+<li>addon class should always inherit from 'IAddonInfo'</li>
+<li>Do not use 'sys.exit()'</li>
+<li>Always have 'start', 'execute', 'stop', '__addon__' &amp; '__info__' functions</li>
+<li>You can specify your own function names with config file in your project
+&gt; NOTE: Always have '__info__' &amp; '__addon__' to get meta information</li>
+</ul><p><strong>Meta:</strong></p>
+
+<ul>
+<li>No extra file for every module, all file meta is included in addon</li>
+<li>Optionally, you can create .info file for every addon with all the meta</li>
+<li>
+<p>use __info__ function to define addon meta ( simple dictionary )</p>
+
+<pre><code>meta = {
+    "uuid": "5b2dd0d5-2bbd-40a9-8250-c21167dbb822", # Not used
+    "name": "FileIOAddon", # Addon name 
+    "type": "0", # Type of addon for __future__
+    "description": "File IO related operations will be done with this addon",
+    "execution_seq": ["start", "execute"],
+    "os": ["linux", "win32"],
+    "stop_seq": ["stop"],
+    "version": "1.0.5",
+    "author": "Ninad Mhatre",
+    "help_url": "http://www.google.com/easydep/addon/FileIOAddon.html"
+}
+</code></pre>
+
+<blockquote>
+<p>Note: Copy above "meta" in .info file and keep it along with .py.
+      Just make sure .info file is valid JSON file, so you have to remove "meta =" while copying.</p>
+</blockquote>
+</li>
+</ul><h2>
+<a name="more-information" class="anchor" href="#more-information"><span class="octicon octicon-link"></span></a>More Information</h2>
+
+<p>Please check <a href="https://github.com/ninadmhatre/addonpy/wiki">wiki</a> for complete information.</p>
+        </section>
+
+        <aside id="sidebar">
+          <a href="https://github.com/ninadmhatre/addonpy/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/ninadmhatre/addonpy/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
+
+          <p class="repo-owner"><a href="https://github.com/ninadmhatre/addonpy"></a> is maintained by <a href="https://github.com/ninadmhatre">ninadmhatre</a>.</p>
+
+          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
+    </div>
+
+  
+  </body>
+</html>
