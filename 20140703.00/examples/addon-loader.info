@@ -1,0 +1,5 @@
+{
+    "required_functions": ["start", "stop", "execute", "__addon__"],
+    "addon_places": ["..\\src\\Default", "..\\src\\Hook"],
+    "parse_from_info_file": "False"
+}
