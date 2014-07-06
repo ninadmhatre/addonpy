@@ -1,0 +1,160 @@
+2014-07-06 16:48:21,359 - addon_logger - DEBUG - Trying to read addonpy config for this project from 'addon-loader.info'
+2014-07-06 16:48:21,359 - addon_logger - DEBUG - Addon directory mentioned as relative, converting '.\Default' as absolute path...
+2014-07-06 16:48:21,361 - addon_logger - DEBUG - Recursive addon search is: On
+2014-07-06 16:48:21,361 - addon_logger - DEBUG - Lazy load mode is: Off
+2014-07-06 16:48:21,361 - addon_logger - DEBUG - Searching 'C:\Users\Ninad\PycharmProjects\plugable_arch\examples\Default' for addons with extension .info...
+2014-07-06 16:48:21,362 - addon_logger - DEBUG - > Addon file 'C:\Users\Ninad\PycharmProjects\plugable_arch\examples\Default\CommandLineAddon.info' found...
+2014-07-06 16:48:21,367 - addon_logger - DEBUG - addon loaded: 'CommandLineAddon'
+2014-07-06 16:48:21,367 - addon_logger - DEBUG - > Addon file 'C:\Users\Ninad\PycharmProjects\plugable_arch\examples\Default\FileIOAddon.info' found...
+2014-07-06 16:48:21,368 - addon_logger - DEBUG - addon loaded: 'FileIOAddon'
+2014-07-06 16:48:21,368 - addon_logger - DEBUG - > Addon file 'C:\Users\Ninad\PycharmProjects\plugable_arch\examples\Default\Hook\PingAddon.info' found...
+2014-07-06 16:48:21,369 - addon_logger - DEBUG - addon loaded: 'PingAddon'
+2014-07-06 16:48:21,369 - addon_logger - DEBUG - > Addon file 'C:\Users\Ninad\PycharmProjects\plugable_arch\examples\Default\Hook\PingNewAddon.info' found...
+2014-07-06 16:48:21,371 - addon_logger - DEBUG - addon loaded: 'PingNewAddon'
+2014-07-06 16:48:21,371 - addon_logger - DEBUG - Validating addon: 'PingAddon'
+2014-07-06 16:48:21,371 - addon_logger - DEBUG - Passed...
+2014-07-06 16:48:21,371 - addon_logger - DEBUG - Validating addon: 'FileIOAddon'
+2014-07-06 16:48:21,371 - addon_logger - DEBUG - Passed...
+2014-07-06 16:48:21,371 - addon_logger - DEBUG - Validating addon: 'PingNewAddon'
+2014-07-06 16:48:21,371 - addon_logger - DEBUG - Passed...
+2014-07-06 16:48:21,371 - addon_logger - DEBUG - Validating addon: 'CommandLineAddon'
+2014-07-06 16:48:21,371 - addon_logger - DEBUG - Passed...
+2014-07-06 16:48:21,371 - addon_logger - DEBUG - Total '4' addons found. passed validation: 4 failed validations: 0
+ Volume in drive C has no label.
+ Volume Serial Number is 3AA2-5E06
+
+ Directory of C:\Users\Ninad\PycharmProjects\plugable_arch\examples
+
+06-Jul-14  04:48 PM    <DIR>          .
+06-Jul-14  04:48 PM    <DIR>          ..
+06-Jul-14  04:44 PM               110 addon-loader.info
+06-Jul-14  04:48 PM             2,197 Addonpy_With_LoggingModule.txt
+03-Jul-14  09:48 PM             4,411 consumer-1.py
+06-Jul-14  04:46 PM             5,152 consumer.py
+06-Jul-14  04:47 PM    <DIR>          Default
+03-Jul-14  09:46 PM             6,524 first_run.txt
+20-Jun-14  01:01 AM             4,344 second_run.txt
+20-Jun-14  01:10 AM             5,150 third_run.txt
+02-Jul-14  11:55 PM                22 __init__.py
+               8 File(s)         27,910 bytes
+               3 Dir(s)   1,616,912,384 bytes free
+ Volume in drive C has no label.
+ Volume Serial Number is 3AA2-5E06
+
+ Directory of C:\Users\Ninad\PycharmProjects\plugable_arch\examples
+
+06-Jul-14  04:48 PM    <DIR>          .
+06-Jul-14  04:48 PM    <DIR>          ..
+06-Jul-14  04:44 PM               110 addon-loader.info
+06-Jul-14  04:48 PM             2,197 Addonpy_With_LoggingModule.txt
+03-Jul-14  09:48 PM             4,411 consumer-1.py
+06-Jul-14  04:46 PM             5,152 consumer.py
+06-Jul-14  04:47 PM    <DIR>          Default
+03-Jul-14  09:46 PM             6,524 first_run.txt
+20-Jun-14  01:01 AM             4,344 second_run.txt
+20-Jun-14  01:10 AM             5,150 third_run.txt
+02-Jul-14  11:55 PM                22 __init__.py
+               8 File(s)         27,910 bytes
+               3 Dir(s)   1,616,912,384 bytes free
+Initializing CommandLineAddon module
+
+        Name               : CommandLineAddon
+        Description        : Command line addon for client, this is supposed to provide CLI validation
+        Version            : 1.0.5
+        Type               : Type-1
+        Execution Sequence : [u'start', u'execute']
+        Stop Sequence      : [u'stop']
+        UUID               : EEA8B330-A999-4D9F-89AB-D341330B619F
+        Author             : juguar-team
+        Help Link          : http://www.google.com/easydep/addon/CommandLineAddon.html
+        
+Starting activity in module CommandLineAddonfrom dir C:\Users\Ninad\PycharmProjects\plugable_arch\examples
+Lets call another addon from here ... 'PingAddon'
+Initializing PingAddon module
+starting loop till 10....
+Pinging Server: Attempt 0
+Pinging Server: Attempt 1.
+Pinging Server: Attempt 2..
+Pinging Server: Attempt 3...
+Pinging Server: Attempt 4....
+Pinging Server: Attempt 5.....
+Pinging Server: Attempt 6......
+Pinging Server: Attempt 7.......
+Pinging Server: Attempt 8........
+Pinging Server: Attempt 9.........
+Executing activity in module CommandLineAddon
+Stopping activity in module CommandLineAddon
+[u'PingAddon', u'PingNewAddon', u'CommandLineAddon', u'FileIOAddon']
+Starting activity in module CommandLineAddonfrom dir C:\Users\Ninad\PycharmProjects\plugable_arch\examples
+Lets call another addon from here ... 'PingAddon'
+Initializing PingAddon module
+starting loop till 10....
+Pinging Server: Attempt 0
+Pinging Server: Attempt 1.
+Pinging Server: Attempt 2..
+Pinging Server: Attempt 3...
+Pinging Server: Attempt 4....
+Pinging Server: Attempt 5.....
+Pinging Server: Attempt 6......
+Pinging Server: Attempt 7.......
+Pinging Server: Attempt 8........
+Pinging Server: Attempt 9.........
+Executing activity in module CommandLineAddon
+Stopping activity in module CommandLineAddon
+Initializing FileIOAddon module
+
+        Name               : FileIOAddon
+        Description        : File IO related operations will be done with this addon
+        Version            : 1.0.5
+        Type               : Type-1
+        Execution Sequence : [u'start', u'execute']
+        Stop Sequence      : [u'stop']
+        UUID               : 5b2dd0d5-2bbd-40a9-8250-c21167dbb822
+        Author             : juguar-team
+        Help Link          : http://www.google.com/easydep/addon/FileIOAddon.html
+        
+Executing activity in module FileIOAddon
+Starting activity in module FileIOAddon
+Stopping activity in module FileIOAddon
+Initializing PingAddon module
+
+        Name               : PingAddon
+        Description        : Run in finitie loop and throw exception...just for fun
+        Version            : 1.0.0.1
+        Type               : Type-2
+        Execution Sequence : [u'start', u'pause', u'execute']
+        Stop Sequence      : [u'stop']
+        UUID               : 9d28d505-27ac-435e-8e8c-0f7ddfaa8236
+        Author             : juguar-team
+        Help Link          : http://www.google.com/easydep/addon/PingAddon.html
+        
+starting loop till 10....
+Pinging Server: Attempt 0
+Pinging Server: Attempt 1.
+Pinging Server: Attempt 2..
+Pinging Server: Attempt 3...
+Pinging Server: Attempt 4....
+Pinging Server: Attempt 5.....
+Pinging Server: Attempt 6......
+Pinging Server: Attempt 7.......
+Pinging Server: Attempt 8........
+Pinging Server: Attempt 9.........
+just a pause b/w the setup & actual execution but i will throw exception..
+Pinging Server: Attempt 0
+Pinging Server: Attempt 1.
+Pinging Server: Attempt 2..
+Pinging Server: Attempt 3...
+Pinging Server: Attempt 4....
+Pinging Server: Attempt 5.....
+Addon threw exception, make sure to catch it...This can not be more than 4!!!!!
+Stopping activity in module PingAddon
+Traceback (most recent call last):
+  File "consumer.py", line 145, in <module>
+    run_mgr.by_config(pingadd)
+  File "C:\Users\Ninad\PycharmProjects\plugable_arch\src\addonpyExecutor.py", line 65, in by_config
+    self._run(addon, addon.get_start_seq(), addon.get_stop_seq())
+  File "C:\Users\Ninad\PycharmProjects\plugable_arch\src\addonpyExecutor.py", line 80, in _run
+    e_func()
+  File "C:\Users\Ninad\PycharmProjects\plugable_arch\examples\Default\Hook\PingAddon.py", line 28, in pause
+    raise ArithmeticError("This can not be more than 4!!!!!")
+ArithmeticError: This can not be more than 4!!!!!

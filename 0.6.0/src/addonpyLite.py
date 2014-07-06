@@ -1,11 +1,11 @@
-__author__ = 'Ninad'
+__author__ = 'Ninad Mhatre'
+__version__ = '1.0.0'
 
 import os
 import importlib
 from datetime import datetime
+from addonpy.addonpyHelpers import AddonHelper
 import sys
-
-from addonpyHelpers import AddonHelper
 
 
 class AddonLoader(object):
@@ -13,7 +13,7 @@ class AddonLoader(object):
     Addon Loader class, scans, validates, loads the addons and used to get the instance of the addons
     """
 
-    ext = '.info'
+    ext = '.py'
 
     # Initializer
 
@@ -22,6 +22,8 @@ class AddonLoader(object):
         Initialize with optional verbose mode (print information) and optional logger (not implemented)
         :param verbose: print loading information
         :param logger: custom logger used in verbose mode
+        :param recursive: recursively search for addons
+        :param lazy_load: <UNUSED> kept it so that program running with addonpy will run addonpyLite
         :return: void
         """
         # Instance variables
@@ -35,15 +37,12 @@ class AddonLoader(object):
         self.logger = logger
         self.addon_dirs = []
         self.recursive_search = recursive
-        self.lazy_load = lazy_load
 
         # Setting up module
         self.init_dir = AddonLoader._get_calling_script_dir()
         self._load_own_config()
         self._apply_config()
         self.print_current_config()
-
-    # Setters
 
     def _apply_config(self):
         """
@@ -54,7 +53,9 @@ class AddonLoader(object):
 
     def print_current_config(self):
         self.log("Recursive addon search is: {0}".format('On' if self.recursive_search else 'Off'))
-        self.log("Lazy load mode is: {0}".format('On' if self.lazy_load else 'Off'))
+        self.log("Lazy load mode is not supported!")
+
+    # Setters
 
     def set_logger(self, logger):
         """
@@ -62,22 +63,6 @@ class AddonLoader(object):
         :param logger: logger instance
         """
         self.logger = logger
-
-    def set_lazy_load(self, state):
-        """
-        Change lazy_load mode. Recommended: Either set while initializing or leave it default
-        :param state: true or false
-        :return: void
-        """
-        self.lazy_load = self._convert_str_to_bool(state)
-
-    def set_recursive_search(self, state):
-        """
-        Change recursive search mode for addons, Recommended: Either set while initializing or leave it default
-        :param state: true or false
-        :return: void
-        """
-        self.recursive_search = self._convert_str_to_bool(state)
 
     def set_addon_dirs(self, dirs):
         """
@@ -93,20 +78,6 @@ class AddonLoader(object):
 
         self.addon_dirs = dirs
 
-    # Private
-
-    def _get_bool_from_config(self, key):
-        """
-        Convert string config value to boolean
-        :param key: key whose value to get from config
-        :return: boolean according to str
-        :rtype: bool
-        """
-        if key in self.active_config:
-            return AddonHelper.convert_string_to_boolean(self.active_config.get(key))
-        else:
-            return False
-
     # Getters
 
     @staticmethod
@@ -119,14 +90,8 @@ class AddonLoader(object):
         if addon_name.endswith("Addon"):
             if addon_name in sys.modules:
                 _temp = sys.modules.get(addon_name, None)
-                if _temp is not None:
-                    _temp_class = _temp.__dict__.get(addon_name)
-                    return _temp_class()
-                else:
-                    return None
-            else:
-                print("** Are you running this with Lazy load? make sure all modules are already loaded! **")
-                return None  # silent
+                _temp_class = _temp.__dict__.get(addon_name)
+                return _temp_class()
         else:
             return None
 
@@ -145,7 +110,7 @@ class AddonLoader(object):
         self._validate_addons()
 
         for addon in self.scanned_addons.keys():
-            self._get_addon_class(addon, self.lazy_load)
+            self._get_addon_class(addon)
 
     def get_instance(self, addon):
         """
@@ -155,80 +120,46 @@ class AddonLoader(object):
         :rtype: class instance
         :raises: ImportWarning, NameError
         """
-
-        if len(self.loaded_addons) == 0 and not self.lazy_load:
+        if len(self.loaded_addons) == 0:
             err = 'No addon loaded, first call .load_addons() or no addons found in given directory'
             self.log(err, 'error')
-            raise ImportError(err)
-
-        # addon must be already part of scanned addon list
-        ## BUG: Not working!!
-        source_file = ''
-        if addon in self.scanned_addons:
-            source_file = self.scanned_addons[addon]['FILE']
-
-        if self.lazy_load:
-            self._load_module_from_source(addon, source_file, False)
-            if self._validate_addon(addon):
-                self.log("'{0}' addon validated successfully".format(addon))
-            else:
-                self.log("'{0}' addon failed validation".format(addon), 'error')
-                raise ImportError("Addon failed validation, please check log file")
-
-            self._get_addon_class(addon, lazy_load=False)
+            raise ImportWarning(err)
 
         if addon not in self.loaded_addons:
             raise NameError("'{0}' addon is not loaded".format(addon))
         _instance = self.loaded_addons.get(addon)
         return _instance.get('CLASS')()
 
-    def get_loaded_addons(self, by_type=None, list_all=False):
+    def get_loaded_addons(self):
         """
-        get addons based on specific user specified type. will show only loaded modules, if lazy_load is set it will
-        return 0 at start and as addons are requested this will be populated
-        :param by_type: type name
-        :param list_all: list all loaded modules
+        get loaded addons by addonpy
         :return: list of loaded addons
         """
-        if list_all:
-            return self.loaded_addons.keys()
-
-        if by_type is None:
-            return
-
-        result = list()
-
-        for addon in self.loaded_addons.keys():
-            meta = self.loaded_addons[addon]['META']
-
-            if isinstance(meta, dict):
-                if 'type' in meta and meta.get('type') in by_type:
-                    result.append(addon)
-
-        return result
+        return self.loaded_addons.keys()
 
     # Private functions
 
     @staticmethod
     def _get_calling_script_dir():
+        """
+        Get the directory of script using this module
+        :return: directory path
+        """
         caller = sys.argv[0]
         return os.path.dirname(caller)
 
-    def _get_addon_class(self, addon, lazy_load):
+    def _get_addon_class(self, addon):
         """
         Get addon class from loaded module
         :param addon: addon to get
         :return: void ( creates new dict() with class )
         """
-        if lazy_load:
-            return
 
         _temp = self.scanned_addons[addon]['MODULE']
         _temp_class = _temp.__dict__.get(addon)
-        _temp_class.__info__ = self.scanned_addons[addon]['META']
         self.loaded_addons[addon] = {'CLASS': None, 'META': None, 'FILE': None}
         self.loaded_addons[addon]['CLASS'] = _temp_class
-        self.loaded_addons[addon]['META'] = self.scanned_addons[addon]['META']
+        self.loaded_addons[addon]['META'] = dict()
         self.loaded_addons[addon]['FILE'] = self.scanned_addons[addon]['FILE']
 
     def _load_own_config(self):
@@ -246,8 +177,8 @@ class AddonLoader(object):
             addon_conf = dict(required_functions=['start', 'stop', 'execute', '__addon__'],
                               addon_places=[os.path.abspath(os.curdir)],
                               recursive='False',
-                              verbose='False',
-                              lazy_load='False')
+                              verbose='False')
+
             self.active_config = addon_conf
             return
 
@@ -281,24 +212,9 @@ class AddonLoader(object):
                     self.log(">> Not loading '{0}' as file name does not end with 'Addon'".format(addon_file))
                     continue
 
+                self.scanned_addons[addon_name] = {'FILE': addon_file, 'META': dict(), 'MODULE': None}
+                self._load_module_from_source(addon_name, addon_file)
                 self.log("> Addon file '{0}' found...".format(addon_file))
-
-                addon_info = AddonHelper.parse_info_file(addon_file)
-                compatible_platforms = addon_info.get('os')
-
-                if compatible_platforms is not None:
-                    if self.is_compatible_for_current_platform(compatible_platforms):
-                        # Add in scanned_addons
-                        self._update_scanned_addon_list(addon_name, addon_file, addon_info)
-                        self._load_module_from_source(addon_name, addon_file, self.lazy_load)
-                    else:
-                        self.logger.info(">>> Addon '{0}' not compatible with current '{1}' platform."
-                                         "supported platforms by this addon '{2}'".
-                                         format(addon_name, self.current_platform, ','.join(compatible_platforms)))
-                else:
-                    # Add in scanned_addons
-                    self._update_scanned_addon_list(addon_name, addon_file, addon_info)
-                    self._load_module_from_source(addon_name, addon_file, self.lazy_load)
         else:
             self.log("No addons found", "error")
 
@@ -314,35 +230,18 @@ class AddonLoader(object):
         for dir_a in self.addon_dirs:
             if os.path.isdir(dir_a):
                 self.log("Searching '{0}' for addons with extension {1}...".format(dir_a, self.ext))
-                m_list = AddonHelper.walk_dir(dir_a, self.ext, self.recursive_search)
+                m_list = AddonHelper.walk_dir(dir_a, self.ext, self.recursive_search, skip_list=['__init__.py'])
                 matching_list.extend(m_list)
 
         return matching_list
 
-    def _update_scanned_addon_list(self, addon_name, addon_path, addon_info):
+    def _load_module_from_source(self, addon_name, addon_file):
         """
-        Add addon to scanned addon list with basic module information
-        :param addon_name: addon name
-        :param addon_path: absolute addon file path
-        :param addon_info: addon info dict()
+        load module from source with help of importlib module.
+        :param addon_name: name of addon to load from file
+        :param addon_file: addon source file
         :return: void
         """
-        if addon_name in self.scanned_addons:
-            return
-        self.scanned_addons[addon_name] = {'FILE': addon_path, 'META': addon_info, 'MODULE': None}
-
-    def _load_module_from_source(self, addon_name, addon_file, lazy_load):
-        """
-        load addon in sys.modules
-        :param addon_name: addon name
-        :param addon_file: addon absolute file path
-        :param lazy_load: True, load module straight away. False, Load when required.
-        :return: void
-        """
-
-        if lazy_load:  # used when lazy_load == True, load when required
-            return
-
         base_dir = AddonHelper.add_to_module_search_dir(addon_file)
 
         try:
@@ -354,64 +253,38 @@ class AddonLoader(object):
             self.log("addon loaded: '{0}'".format(addon_name))
             self.scanned_addons[addon_name]['MODULE'] = module
 
-    # def is_compatible_for_current_platform(self, eligible_platforms):
-    #     """
-    #     Check if current platform is mentioned in supplied platform(s) list
-    #     :param eligible_platforms: list of platforms addon runs
-    #     :return: True or False
-    #     :rtype: bool
-    #     """
-    #     return self.current_platform in eligible_platforms
-
     def _validate_addons(self):
         """
         validate the addon by checking if addon has required functions defined
         :return: void ( updates scanned_addon dict )
         """
-
-        if self.lazy_load:
-            self.log("skipping validation as lazy_load mode is set, validation will be performed while loading...")
-            return
-
         total = 0
         passed = 0
         failed = 0
 
         for addon in self.scanned_addons.keys():
             total += 1
-            if self._validate_addon(addon):
-                passed += 1
-            else:
+            error_cnt = 0
+            self.log("Validating addon: '{0}'".format(addon))
+            addon_as_module = self.scanned_addons.get(addon)['MODULE']
+            addon_functions = getattr(addon_as_module, addon_as_module.__name__)
+            all_functions = addon_functions.__dict__.keys()
+
+            for expected_function in self.active_config.get('required_functions'):
+                if expected_function not in all_functions:
+                    error_cnt += 1
+                    self.log("     Required method: '{0}' not found!".format(expected_function), 'error')
+
+            if error_cnt > 0:
+                self.log("Failed! Unloading addon...".format(addon), 'error')
+                self.scanned_addons.__delitem__(addon)
                 failed += 1
+            else:
+                passed += 1
+                self.log('Passed...')
 
         self.log("Total '{0}' addons found. passed validation: {1} failed validations: {2}".
                  format(total, passed, failed))
-
-    def _validate_addon(self, addon):
-        """
-        Validate single addon
-        :param addon: addon to validate
-        :return: True or False
-        :rtype: bool
-        """
-        error_cnt = 0
-        self.log("Validating addon: '{0}'".format(addon))
-        addon_as_module = self.scanned_addons[addon]['MODULE']
-        addon_functions = getattr(addon_as_module, addon_as_module.__name__)
-        all_functions = addon_functions.__dict__.keys()
-
-        for expected_function in self.active_config.get('required_functions'):
-            if expected_function not in all_functions:
-                error_cnt += 1
-                self.log("     Required method: '{0}' not found!".format(expected_function), 'error')
-
-        if error_cnt > 0:
-            self.log("Failed! Unloading addon...".format(addon), 'error')
-            self.scanned_addons.__delitem__(addon)
-            return False
-        else:
-            self.log('Passed...')
-            return True
 
     # Logger
 
@@ -442,6 +315,5 @@ class AddonLoader(object):
             elif level == 'fatal':
                 self.logger.fatal(message)
 
-
 if __name__ == '__main__':
-    print("use this as module, basic help: import addonpy")
+    print("use this as module, basic help: import addonpyLite")

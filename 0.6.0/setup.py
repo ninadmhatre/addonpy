@@ -2,10 +2,13 @@ from setuptools import setup, find_packages
 
 setup(
     name='addonpy',
-    version='0.1.0',
+    version='0.3.0',
     author='Ninad Mhatre',
     author_email='ninad.mhatre@gmail.com',
-    packages=['src'],
+    packages=['src', 'tests', 'examples', 'docs'],
+    package_data = {'tests': ['*.bat'],
+                    'examples': ['*.txt'],
+                    'docs': ['*.html']},
     url='https://github.com/ninadmhatre/addonpy/wiki',
     license='MIT',
     description='A simple addon/plug-in module',

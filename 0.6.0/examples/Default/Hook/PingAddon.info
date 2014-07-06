@@ -1,0 +1,12 @@
+{
+            "uuid": "9d28d505-27ac-435e-8e8c-0f7ddfaa8236",
+            "name": "PingAddon",
+            "type": "Type-2",
+            "description": "Run in finitie loop and throw exception...just for fun",
+            "execution_seq": ["start", "pause", "execute"],
+            "stop_seq": ["stop"],
+            "version": "1.0.0.1",
+            "author": "juguar-team",
+            "os": ["linux", "win32"],
+            "help_url": "http://www.google.com/easydep/addon/PingAddon.html"
+}

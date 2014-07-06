@@ -1,11 +1,12 @@
-__author__ = 'Ninad'
+__author__ = 'Ninad Mhatre'
+__version__ = '0.6.0'
 
 import os
 import importlib
 from datetime import datetime
 import sys
 
-from addonpyHelpers import AddonHelper
+from addonpy.addonpyHelpers import AddonHelper
 
 
 class AddonLoader(object):
@@ -22,8 +23,11 @@ class AddonLoader(object):
         Initialize with optional verbose mode (print information) and optional logger (not implemented)
         :param verbose: print loading information
         :param logger: custom logger used in verbose mode
+        :param recursive: recursively search for addons
+        :param lazy_load: scan first load when called
         :return: void
         """
+
         # Instance variables
         self.scanned_addons = dict()
         self.loaded_addons = dict()
@@ -52,7 +56,22 @@ class AddonLoader(object):
         """
         self.addon_dirs = self.active_config.get('addon_places')
 
+        # recursive_from_config = self.active_config.get('recursive')
+        # lazy_load_from_config = self.active_config.get('lazy_load')
+        # verbose_from_config = self.active_config.get('verbose')
+        #
+        # if recursive_from_config:
+        #     self.recursive_search = AddonHelper.convert_string_to_boolean(recursive_from_config)
+        # if lazy_load_from_config:
+        #     self.lazy_load = AddonHelper.convert_string_to_boolean(lazy_load_from_config)
+        # if verbose_from_config:
+        #     self.verbose = AddonHelper.convert_string_to_boolean(verbose_from_config)
+
     def print_current_config(self):
+        """
+        prints current configuration recursive & lazy load mode status, if On or Off
+        :return: void
+        """
         self.log("Recursive addon search is: {0}".format('On' if self.recursive_search else 'Off'))
         self.log("Lazy load mode is: {0}".format('On' if self.lazy_load else 'Off'))
 
@@ -91,7 +110,12 @@ class AddonLoader(object):
             self.log(error_message, 'error')
             raise TypeError(error_message)
 
-        self.addon_dirs = dirs
+        self.addon_dirs = list()
+
+        for dir_name in dirs:
+            _abs_temp_path = self._get_abspath(dir_name, True)
+            if os.path.isdir(_abs_temp_path):
+                self.addon_dirs.append(_abs_temp_path)
 
     # Private
 
@@ -149,7 +173,7 @@ class AddonLoader(object):
 
     def get_instance(self, addon):
         """
-        get instance of addon loaded by name
+        get instance of specific addon loaded by addonpy.
         :param addon: addon name for which instance will be returned
         :return: instance of loaded addon
         :rtype: class instance
@@ -161,21 +185,24 @@ class AddonLoader(object):
             self.log(err, 'error')
             raise ImportError(err)
 
+        if addon not in self.scanned_addons:
+            raise ImportError('{0} is not available for loading, no such addon found'.format(addon))
+
         # addon must be already part of scanned addon list
-        ## BUG: Not working!!
         source_file = ''
         if addon in self.scanned_addons:
             source_file = self.scanned_addons[addon]['FILE']
 
-        if self.lazy_load:
-            self._load_module_from_source(addon, source_file, False)
-            if self._validate_addon(addon):
-                self.log("'{0}' addon validated successfully".format(addon))
-            else:
-                self.log("'{0}' addon failed validation".format(addon), 'error')
-                raise ImportError("Addon failed validation, please check log file")
+        if self.scanned_addons[addon]['MODULE'] is None:
+            if self.lazy_load:
+                self._load_module_from_source(addon, source_file, False)
+                if self._validate_addon(addon):
+                    self.log("'{0}' addon validated successfully".format(addon))
+                else:
+                    self.log("'{0}' addon failed validation".format(addon), 'error')
+                    raise ImportError("Addon failed validation, please check log file")
 
-            self._get_addon_class(addon, lazy_load=False)
+                self._get_addon_class(addon, lazy_load=False)
 
         if addon not in self.loaded_addons:
             raise NameError("'{0}' addon is not loaded".format(addon))
@@ -207,10 +234,12 @@ class AddonLoader(object):
 
         return result
 
-    # Private functions
-
     @staticmethod
     def _get_calling_script_dir():
+        """
+        Get the directory of script using this module
+        :return: directory path
+        """
         caller = sys.argv[0]
         return os.path.dirname(caller)
 
@@ -218,6 +247,7 @@ class AddonLoader(object):
         """
         Get addon class from loaded module
         :param addon: addon to get
+        :param lazy_load: if set, return otherwise get class instance from loaded module
         :return: void ( creates new dict() with class )
         """
         if lazy_load:
@@ -252,18 +282,27 @@ class AddonLoader(object):
             return
 
         for dir_name in addon_conf.get('addon_places'):
-            if dir_name.startswith('.') or dir_name.startswith('..'):
-                self.log("Addon directory(ies) mentioned as relative paths, converting to absolute paths...")
-                _abs_temp_path = os.path.abspath(os.path.join(self.init_dir, dir_name))
-            else:
-                # Its not a relative path. you cannot use $ENV in loader.info file, rely on set_addon_dirs method...
-                _abs_temp_path = dir_name
-
+            _abs_temp_path = self._get_abspath(dir_name, True)
             if os.path.isdir(_abs_temp_path):
                 self.addon_dirs.append(_abs_temp_path)
 
         addon_conf['addon_places'] = self.addon_dirs
         self.active_config = addon_conf
+
+    def _get_abspath(self, fpath, verbose):
+        """
+        get absolute path from relative path
+        :param fpath: relative path
+        :param verbose: print info to screen?
+        :return: absolute path
+        """
+        if fpath.startswith('.') or fpath.startswith('..'):
+            if verbose:
+                self.log("Addon directory mentioned as relative, converting '{0}' as absolute path...".format(fpath))
+            _abs_temp_path = os.path.abspath(os.path.join(self.init_dir, fpath))
+        else:
+            _abs_temp_path = fpath
+        return _abs_temp_path
 
     def _scan_for_addons(self):
         """
@@ -287,7 +326,7 @@ class AddonLoader(object):
                 compatible_platforms = addon_info.get('os')
 
                 if compatible_platforms is not None:
-                    if self.is_compatible_for_current_platform(compatible_platforms):
+                    if AddonHelper.is_compatible_for_current_platform(compatible_platforms):
                         # Add in scanned_addons
                         self._update_scanned_addon_list(addon_name, addon_file, addon_info)
                         self._load_module_from_source(addon_name, addon_file, self.lazy_load)
@@ -329,6 +368,10 @@ class AddonLoader(object):
         """
         if addon_name in self.scanned_addons:
             return
+        if addon_path.endswith('.info'):
+            file_path = addon_path.replace('.info', '.py')
+            addon_path = file_path
+
         self.scanned_addons[addon_name] = {'FILE': addon_path, 'META': addon_info, 'MODULE': None}
 
     def _load_module_from_source(self, addon_name, addon_file, lazy_load):
@@ -354,18 +397,9 @@ class AddonLoader(object):
             self.log("addon loaded: '{0}'".format(addon_name))
             self.scanned_addons[addon_name]['MODULE'] = module
 
-    # def is_compatible_for_current_platform(self, eligible_platforms):
-    #     """
-    #     Check if current platform is mentioned in supplied platform(s) list
-    #     :param eligible_platforms: list of platforms addon runs
-    #     :return: True or False
-    #     :rtype: bool
-    #     """
-    #     return self.current_platform in eligible_platforms
-
     def _validate_addons(self):
         """
-        validate the addon by checking if addon has required functions defined
+        validate the addons by checking if addon has required functions defined
         :return: void ( updates scanned_addon dict )
         """
 
@@ -389,11 +423,12 @@ class AddonLoader(object):
 
     def _validate_addon(self, addon):
         """
-        Validate single addon
+        Validate single addon"s" relies on this to validate single addon
         :param addon: addon to validate
         :return: True or False
         :rtype: bool
         """
+
         error_cnt = 0
         self.log("Validating addon: '{0}'".format(addon))
         addon_as_module = self.scanned_addons[addon]['MODULE']
