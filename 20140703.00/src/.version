@@ -1,0 +1,6 @@
+v20140703.0
+-----------
+    - Fully supports lazy load and recursive search mode
+    - addonpyLite for projects with no .info files
+    - removed need of duplicating of meta info within addon and .info file
+    - get list according to type
