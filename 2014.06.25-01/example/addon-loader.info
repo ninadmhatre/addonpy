@@ -1,5 +1,0 @@
-{
-    "required_functions": ["start", "stop", "execute", "__addon__", "__info__"],
-    "addon_places": ["..\\src\\Default"],
-    "parse_from_info_file": "False"
-}
