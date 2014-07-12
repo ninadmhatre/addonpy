@@ -20,9 +20,10 @@ if major == 3:
 elif major == 2:
     print("Running tests on: python 2")
 
+exit_count = 0
+    
 for test in glob.glob(os.path.join(current_dir, "test_*.py")):
-    print("Test :" + test)
-
     exit_code = os.system("python {0}".format(test))
+    exit_count += 1
 
-    print("exit code: {0}".format(exit_code))
+sys.exit(exit_count)
