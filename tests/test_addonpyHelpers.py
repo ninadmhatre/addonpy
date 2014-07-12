@@ -1,6 +1,6 @@
 import unittest
 from addonpy.addonpyHelpers import AddonHelper
-
+import sys
 
 class TestAddonHelper(unittest.TestCase):
     """
@@ -29,17 +29,17 @@ class TestAddonHelper(unittest.TestCase):
         """
         test to check if works on both platforms...
         """
+        test_file_path, file_name, file_ext = ('','','')
+        
+        if sys.platform.startswith('win'):
+            test_file_path, file_name, file_ext = (r'c:\test\modules\TestAddon.py','TestAddon','py')
+        else:
+            test_file_path, file_name, file_ext = (r'/tmp/test/modules/TestAddonInfo.info','TestAddonInfo','info')
 
-        test_file_windows = r'c:\test\modules\TestAddon.py'
-        test_file_unix = r'/tmp/test/modules/TestAddonInfo.info'
+        name, ext = AddonHelper.get_basename_and_ext(test_file_path)
 
-        w_f, w_fe = AddonHelper.get_basename_and_ext(test_file_windows)
-        u_f, u_fe = AddonHelper.get_basename_and_ext(test_file_unix)
-
-        self.assertEqual('TestAddon', w_f)
-        self.assertEqual('TestAddonInfo', u_f)
-        self.assertEqual('py', w_fe)
-        self.assertEqual('info', u_fe)
+        self.assertEqual(file_name, name)
+        self.assertEqual(file_ext, ext)        
 
 if __name__ == '__main__':
     suite = unittest.TestLoader().loadTestsFromTestCase(TestAddonHelper)
