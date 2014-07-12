@@ -1,0 +1,11 @@
+{
+    "uuid": "5b2dd0d5-2bbd-40a9-8250-c21167dbb822",
+    "name": "FileIOAddon",
+    "type": "Type-1",
+    "description": "File IO related operations will be done with this addon",
+    "execution_seq": ["start", "execute"],
+    "stop_seq": ["stop"],
+    "version": "Release-1",
+    "author": "juguar-team",
+    "help_url": "http://www.google.com/easydep/addon/FileIOAddon.html"
+}

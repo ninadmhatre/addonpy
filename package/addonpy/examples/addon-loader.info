@@ -1,0 +1,4 @@
+{
+    "required_functions": ["start", "stop", "execute", "__addon__"],
+    "addon_places": [".\\Default"]
+}
