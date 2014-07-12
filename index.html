@@ -1,0 +1,61 @@
+<h1>addonpy&nbsp;</h1>
+
+<hr />
+<p>&quot;<strong>addonpy</strong>&quot; is a python module to provide addon / plug-in like functionality. This is simple addon interface provider.</p>
+
+<h1>Installation</h1>
+
+<hr />
+<blockquote>
+<p><code>pip install addonpy&nbsp;</code></p>
+</blockquote>
+
+<p>or download zip file and add unzipped location in PYTHONPATH variable so that python can find the module</p>
+
+<h1>Works On</h1>
+
+<hr />
+<p><strong>Python</strong>: 2.7, 3.2, 3.3 &amp; 3.4</p>
+
+<p><strong>Build CI</strong>:&nbsp;<a href="https://travis-ci.org/ninadmhatre/addonpy">https://travis-ci.org/ninadmhatre/addonpy</a>&nbsp;</p>
+
+<p><strong>Current Build Status</strong>:&nbsp;<img alt="build_status" src="https://travis-ci.org/ninadmhatre/addonpy.svg?branch=master" /></p>
+
+<h1>Features</h1>
+
+<hr />
+<ol>
+	<li>Allows config file to set default values (addon-loader.info) [Please read <a href="https://github.com/ninadmhatre/addonpy/wiki">wiki</a> for more information]</li>
+	<li>Allows you to specify which functions must addon have in order to consider it a valid one!</li>
+	<li>Allows lazy_load mode, addon will be loaded when you try to get_instane of that module</li>
+	<li>Allows nested addon calling (lazy_load mode break this functionalty)&nbsp;</li>
+	<li>Supports recursive directory search for addons, just specify top level directory</li>
+	<li>Allows you to specify your own logger (using decorator)&nbsp;</li>
+	<li>Works on Python 2.7 &amp; Python 3.* (Check TravisCI for more info)</li>
+</ol>
+
+<h1>Modules</h1>
+
+<hr />
+<ul>
+	<li>
+	<p><a href="docs/addonpy.html">addonpy</a>: Main module which allows loading of addons and requires every addon to have .info file for lazy_load</p>
+	</li>
+	<li>
+	<p><a href="docs/addonpyLite.html">addonpyLite</a>: Same as above, but doesnt require .info file. Info file information is embedded into addon itself. No lazy_load mode</p>
+	</li>
+	<li>
+	<p><a href="docs/addonpyHelpers.html">addonpyHelpers</a>: Helper module</p>
+	</li>
+	<li>
+	<p><a href="docs/addonpyExecutor.html">addonpyExecutor</a>: Execute addons by order with try..except (try..catch) block arround addon being executed</p>
+	</li>
+	<li>
+	<p><a href="docs/IAddonInfo.html">IAddonInfo</a>: Every addon should inherit from this class; used to retrieve addon related information</p>
+	</li>
+	<li>
+	<p><a href="docs/ILogger.html">ILogger</a>: Use if you are using your own logger and want addonpy to use the same. decorator around your logger.</p>
+	</li>
+</ul>
+
+<p>&nbsp;</p>
