@@ -6,11 +6,13 @@ import importlib
 from datetime import datetime
 import sys
 
-from .addonpyHelpers import AddonHelper
+from addonpy.addonpyHelpers import AddonHelper
+
 
 def get_version():
     return AddonHelper.get_version()
-    
+
+
 class AddonLoader(object):
     """
     Addon Loader class, scans, validates, loads the addons and used to get the instance of the addons

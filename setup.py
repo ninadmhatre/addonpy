@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='addonpy',
-    version='0.8.1',
+    version='0.9.0',
     author='Ninad Mhatre',
     author_email='ninad.mhatre@gmail.com',
     packages=['addonpy',

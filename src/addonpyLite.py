@@ -49,7 +49,8 @@ class AddonLoader(object):
         apply given configuration
         :return: void
         """
-        self.addon_dirs = self.active_config.get('addon_places')
+        dir_list = self.active_config.get('addon_places')
+        self.set_addon_dirs(dir_list)
 
     def print_current_config(self):
         self.log("Recursive addon search is: {0}".format('On' if self.recursive_search else 'Off'))
