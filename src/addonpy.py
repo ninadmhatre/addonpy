@@ -1,12 +1,11 @@
 __author__ = 'Ninad Mhatre'
-__version__ = '0.6.2'
 
 import os
 import importlib
 from datetime import datetime
 import sys
 
-from addonpy.addonpyHelpers import AddonHelper
+from .addonpyHelpers import AddonHelper
 
 
 def get_version():
@@ -19,10 +18,11 @@ class AddonLoader(object):
     """
 
     ext = '.info'
+    current_platform = AddonHelper.get_os()
 
     # Initializer
 
-    def __init__(self, verbose=False, logger=None, recursive=False, lazy_load=False):
+    def __init__(self, verbose=None, logger=None, recursive=None, lazy_load=None):
         """
         Initialize with optional verbose mode (print information) and optional logger (not implemented)
         :param verbose: print loading information
@@ -58,18 +58,33 @@ class AddonLoader(object):
         apply given configuration
         :return: void
         """
-        self.addon_dirs = self.active_config.get('addon_places')
+        self.set_addon_dirs(self.active_config.get('addon_places'))
 
-        # recursive_from_config = self.active_config.get('recursive')
-        # lazy_load_from_config = self.active_config.get('lazy_load')
-        # verbose_from_config = self.active_config.get('verbose')
-        #
-        # if recursive_from_config:
-        #     self.recursive_search = AddonHelper.convert_string_to_boolean(recursive_from_config)
-        # if lazy_load_from_config:
-        #     self.lazy_load = AddonHelper.convert_string_to_boolean(lazy_load_from_config)
-        # if verbose_from_config:
-        #     self.verbose = AddonHelper.convert_string_to_boolean(verbose_from_config)
+        recursive_from_config = self.active_config.get('recursive')
+        lazy_load_from_config = self.active_config.get('lazy_load')
+        verbose_from_config = self.active_config.get('verbose')
+
+        if self.recursive_search is None:
+            if recursive_from_config:
+                self.log("Picking 'recursive' search value from config...", "info")
+                self.recursive_search = AddonHelper.convert_string_to_boolean(recursive_from_config)
+            else:
+                self.recursive_search = False
+
+        if self.lazy_load is None:
+            print("value of lazy load config :{0}".format(lazy_load_from_config))
+            if lazy_load_from_config:
+                self.log("Picking 'lazy_load' value from config...", "info")
+                self.lazy_load = AddonHelper.convert_string_to_boolean(lazy_load_from_config)
+            else:
+                self.lazy_load = False
+
+        if self.verbose is None:
+            if verbose_from_config:
+                self.log("Picking 'verbose' setting from config...", "info")
+                self.verbose = AddonHelper.convert_string_to_boolean(verbose_from_config)
+            else:
+                self.verbose = False
 
     def print_current_config(self):
         """
@@ -92,7 +107,7 @@ class AddonLoader(object):
         :param state: true or false
         :return: void
         """
-        self.lazy_load = self._convert_str_to_bool(state)
+        self.lazy_load = AddonHelper.convert_string_to_boolean(state)
 
     def set_recursive_search(self, state):
         """
@@ -100,7 +115,7 @@ class AddonLoader(object):
         :param state: true or false
         :return: void
         """
-        self.recursive_search = self._convert_str_to_bool(state)
+        self.recursive_search = AddonHelper.convert_string_to_boolean(state)
 
     def set_addon_dirs(self, dirs):
         """
@@ -123,17 +138,17 @@ class AddonLoader(object):
 
     # Private
 
-    def _get_bool_from_config(self, key):
-        """
-        Convert string config value to boolean
-        :param key: key whose value to get from config
-        :return: boolean according to str
-        :rtype: bool
-        """
-        if key in self.active_config:
-            return AddonHelper.convert_string_to_boolean(self.active_config.get(key))
-        else:
-            return False
+    # def _get_bool_from_config(self, key):
+    #     """
+    #     Convert string config value to boolean
+    #     :param key: key whose value to get from config
+    #     :return: boolean according to str
+    #     :rtype: bool
+    #     """
+    #     if key in self.active_config:
+    #         return AddonHelper.convert_string_to_boolean(self.active_config.get(key))
+    #     else:
+    #         return False
 
     # Getters
 
@@ -304,6 +319,7 @@ class AddonLoader(object):
             if verbose:
                 self.log("Addon directory mentioned as relative, converting '{0}' as absolute path...".format(fpath))
             _abs_temp_path = os.path.abspath(os.path.join(self.init_dir, fpath))
+            self.log("absolute path '{0}'".format(_abs_temp_path))
         else:
             _abs_temp_path = fpath
         return _abs_temp_path
@@ -335,9 +351,9 @@ class AddonLoader(object):
                         self._update_scanned_addon_list(addon_name, addon_file, addon_info)
                         self._load_module_from_source(addon_name, addon_file, self.lazy_load)
                     else:
-                        self.logger.info(">>> Addon '{0}' not compatible with current '{1}' platform."
-                                         "supported platforms by this addon '{2}'".
-                                         format(addon_name, self.current_platform, ','.join(compatible_platforms)))
+                        self.log(">>> Addon '{0}' not compatible with current '{1}' platform."
+                                 "supported platforms by this addon '{2}'".
+                                 format(addon_name, self.current_platform, ','.join(compatible_platforms)), "info")
                 else:
                     # Add in scanned_addons
                     self._update_scanned_addon_list(addon_name, addon_file, addon_info)

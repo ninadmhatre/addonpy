@@ -156,4 +156,23 @@ class AddonHelper(object):
                 version, date = first_line.split('|', 2)
                 return version
         else:
-            return __version__
+            return __version__ + ' (Default)'
+
+    @staticmethod
+    def get_os():
+        actual = sys.platform
+        derived_os = ""
+
+        if actual.startswith('linux'):
+            derived_os = "linux"
+        elif actual.startswith('win'):
+            derived_os = "win"
+        elif actual.startswith('darwin'):
+            derived_os = "osx"
+
+        return derived_os
+
+
+
+
+

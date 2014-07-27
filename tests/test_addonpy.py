@@ -1,3 +1,4 @@
+import os
 import unittest
 from addonpy.addonpy import AddonLoader as loader
 
@@ -105,8 +106,20 @@ class TestAddonLoader(unittest.TestCase):
         self.lazy_load_mgr = loader(verbose=False, recursive=True, lazy_load=True)
         self.lazy_load_mgr.set_addon_dirs(['./data'])
         self.lazy_load_mgr.load_addons()
-
         self.assertRaises(ImportError, self.lazy_load_mgr.get_instance, 'InvalidAddon')
+
+    def test_relative_path_conversion(self):
+        dir_1 = './data'
+        dir_op = os.path.abspath(os.path.join(os.path.dirname(__file__), 'data'))
+        dir_2 = '../tests/data'
+
+        self.addon_dirs = list()
+        self.lazy_load_mgr.set_addon_dirs([dir_1])
+        self.assertEqual(self.addon_dirs[0], dir_op)
+
+        self.addon_dirs = list()
+        self.lazy_load_mgr.set_addon_dirs([dir_2])
+        self.assertEqual(self.addon_dirs[0], dir_op)
 
 if __name__ == '__main__':
     suite = unittest.TestLoader().loadTestsFromTestCase(TestAddonLoader)
