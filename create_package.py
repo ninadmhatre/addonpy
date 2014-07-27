@@ -13,10 +13,12 @@ import os
 import sys
 import shutil
 import time
+
 from src.addonpyHelpers import AddonHelper
 
-if sys.argv[1] is None:
-    version_user = raw_input("Please enter version #: ").rstrip()
+
+if len(sys.argv) == 1:
+    version_user = input("Please enter version #: ").rstrip()
 else:
     version_user = sys.argv[1].rstrip()
 
@@ -63,6 +65,7 @@ v_info = "{0}|[{1}-{2}-{3} {4}:{5}:{6} UTC]".format(version_user,
                                                     current_time.tm_min,
                                                     current_time.tm_sec)
 
+print("Package directory .... '{0}'".format(PACKAGE_DIR))
 print("Copied source files...")
 
 with open(os.path.join(PKG_DIR, '.version'), 'w') as v:
