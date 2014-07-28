@@ -81,11 +81,11 @@ class AddonHelper(object):
                         file_list.append(abs_file)
                     else:
                         try:
-                            n, e = AddonHelper.get_basename_and_ext(abs_file)
+                            parts = AddonHelper.get_basename_and_ext(abs_file)
                         except ValueError:
                             print("Error: Failed to retrieve basename and extension from file '{0}'. Ignoring...".
                                   format(abs_file))
-                        if e in ext:
+                        if parts[-1] in ext:
                             file_list.append(abs_file)
             depth += 1
 

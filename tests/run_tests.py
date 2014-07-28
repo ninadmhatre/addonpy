@@ -40,7 +40,7 @@ for test in glob.glob(os.path.join(current_dir, "test_*.py")):
     out, exit_code = runTest(test)
     print("Test: '{0}' exited with '{1}'...".format(test, exit_code))
     for o_line in out:
-        if o_line.endswith('... FAIL'):
+        if o_line.endswith('... FAIL') or o_line.endswith('... ERROR'):
             print("\t>>>Failed: {0}".format(o_line))
             err_cnt += 1
         else:

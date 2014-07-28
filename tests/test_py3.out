@@ -1,7 +1,7 @@
-Running test build from current directory 'C:\Users\Ninad\PycharmProjects\plugable_arch\package-201472821155'
-running with addonpy version: 0.9.1
+Running test build from current directory 'C:\Users\Ninad\PycharmProjects\plugable_arch\package-201472822576'
+running with addonpy version: 0.9.2
 Running tests on: python 3
-Test: 'C:\Users\Ninad\PycharmProjects\plugable_arch\package-201472821155\addonpy\tests\test_addonpy.py' exited with '0'...
+Test: 'C:\Users\Ninad\PycharmProjects\plugable_arch\package-201472822576\addonpy\tests\test_addonpy.py' exited with '0'...
 test_get_instance (__main__.TestAddonLoader) ... ok
 test_get_loaded_addon_instance (__main__.TestAddonLoader) ... ok
 test_get_loaded_addons (__main__.TestAddonLoader) ... ok
@@ -11,17 +11,13 @@ test_set_lazy_load (__main__.TestAddonLoader) ... ok
 test_set_recursive_search (__main__.TestAddonLoader) ... ok
 
 ----------------------------------------------------------------------
-Ran 7 tests in 0.054s
+Ran 7 tests in 0.032s
 
 OK
-value of lazy load config :False
-2014-07-28 21:15:06.302125 [INFO] Picking 'lazy_load' value from config...
-Error: Failed to retrieve basename and extension from file 'C:\Users\Ninad\PycharmProjects\plugable_arch\package-201472821155\addonpy\tests\data\__pycache__\CommandLineAddon.cpython-34.pyc'. Ignoring...
-value of lazy load config :False
-2014-07-28 21:15:06.339629 [INFO] Picking 'lazy_load' value from config...
-Error: Failed to retrieve basename and extension from file 'C:\Users\Ninad\PycharmProjects\plugable_arch\package-201472821155\addonpy\tests\data\__pycache__\CommandLineAddon.cpython-34.pyc'. Ignoring...
+2014-07-28 22:57:07.164375 [INFO] Picking 'lazy_load' value from config...
+2014-07-28 22:57:07.184378 [INFO] Picking 'lazy_load' value from config...
 
-Test: 'C:\Users\Ninad\PycharmProjects\plugable_arch\package-201472821155\addonpy\tests\test_addonpyExecutor.py' exited with '0'...
+Test: 'C:\Users\Ninad\PycharmProjects\plugable_arch\package-201472822576\addonpy\tests\test_addonpyExecutor.py' exited with '0'...
 test_by_config (__main__.TestAddonExecutor) ... ok
 test_by_default (__main__.TestAddonExecutor) ... ok
 test_by_order (__main__.TestAddonExecutor) ... ok
@@ -32,12 +28,12 @@ Ran 4 tests in 0.010s
 
 OK
 
-Test: 'C:\Users\Ninad\PycharmProjects\plugable_arch\package-201472821155\addonpy\tests\test_addonpyHelpers.py' exited with '0'...
+Test: 'C:\Users\Ninad\PycharmProjects\plugable_arch\package-201472822576\addonpy\tests\test_addonpyHelpers.py' exited with '0'...
 test_convert_string_to_boolean (__main__.TestAddonHelper) ... ok
 test_get_basename_and_ext (__main__.TestAddonHelper) ... ok
 
 ----------------------------------------------------------------------
-Ran 2 tests in 0.000s
+Ran 2 tests in 0.001s
 
 OK
 
