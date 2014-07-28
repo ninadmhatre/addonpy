@@ -81,11 +81,11 @@ class AddonHelper(object):
                         file_list.append(abs_file)
                     else:
                         try:
-                            n, e = AddonHelper.get_basename_and_ext(abs_file)
+                            parts = AddonHelper.get_basename_and_ext(abs_file)
                         except ValueError:
                             print("Error: Failed to retrieve basename and extension from file '{0}'. Ignoring...".
                                   format(abs_file))
-                        if e in ext:
+                        if parts[-1] in ext:
                             file_list.append(abs_file)
             depth += 1
 
@@ -132,7 +132,7 @@ class AddonHelper(object):
         return os.path.basename(file_path).split('.', 2)
 
     @staticmethod
-    def is_compatible_for_current_platform(eligible_platforms):
+    def is_compatible_for_current_platform(current, eligible_platforms):
         """
         check if current platform is one listed in supplied platforms
         :param eligible_platforms: supplied platform list
@@ -140,7 +140,7 @@ class AddonHelper(object):
         :rtype: bool
         """
 
-        return sys.platform in eligible_platforms
+        return current in eligible_platforms
     
     @staticmethod
     def get_version():

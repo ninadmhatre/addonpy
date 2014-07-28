@@ -1,41 +1,39 @@
-Running test build from current directory 'C:\Users\Ninad\PycharmProjects\plugable_arch\package-201472821155'
-running with addonpy version: 0.9.1
+Running test build from current directory 'C:\Users\Ninad\PycharmProjects\plugable_arch\package-201472822576'
+running with addonpy version: 0.9.2
 Running tests on: python 2
-Test: 'C:\Users\Ninad\PycharmProjects\plugable_arch\package-201472821155\addonpy\tests\test_addonpy.py' exited with '0'...
+Test: 'C:\Users\Ninad\PycharmProjects\plugable_arch\package-201472822576\addonpy\tests\test_addonpy.py' exited with '0'...
 test_get_instance (__main__.TestAddonLoader) ... ok
 test_get_loaded_addon_instance (__main__.TestAddonLoader) ... ok
 test_get_loaded_addons (__main__.TestAddonLoader) ... ok
 test_invalid_addon_load (__main__.TestAddonLoader) ... ok
 test_relative_path_conversion (__main__.TestAddonLoader) ... ok
 test_set_lazy_load (__main__.TestAddonLoader) ... ok
-test_set_recursive_search (__main__.TestAddonLoader) ... value of lazy load config :False
-2014-07-28 21:15:05.718000 [INFO] Picking 'lazy_load' value from config...
-value of lazy load config :False
-2014-07-28 21:15:05.728000 [INFO] Picking 'lazy_load' value from config...
+test_set_recursive_search (__main__.TestAddonLoader) ... 2014-07-28 22:57:06.547000 [INFO] Picking 'lazy_load' value from config...
+2014-07-28 22:57:06.559000 [INFO] Picking 'lazy_load' value from config...
 ok
 
 ----------------------------------------------------------------------
-Ran 7 tests in 0.017s
+Ran 7 tests in 0.019s
 
 OK
 
-Test: 'C:\Users\Ninad\PycharmProjects\plugable_arch\package-201472821155\addonpy\tests\test_addonpyExecutor.py' exited with '0'...
+Test: 'C:\Users\Ninad\PycharmProjects\plugable_arch\package-201472822576\addonpy\tests\test_addonpyExecutor.py' exited with '0'...
 test_by_config (__main__.TestAddonExecutor) ... ok
 test_by_default (__main__.TestAddonExecutor) ... ok
 test_by_order (__main__.TestAddonExecutor) ... ok
 test_invalid_arguments (__main__.TestAddonExecutor) ... ok
 
 ----------------------------------------------------------------------
-Ran 4 tests in 0.007s
+Ran 4 tests in 0.006s
 
 OK
 
-Test: 'C:\Users\Ninad\PycharmProjects\plugable_arch\package-201472821155\addonpy\tests\test_addonpyHelpers.py' exited with '0'...
+Test: 'C:\Users\Ninad\PycharmProjects\plugable_arch\package-201472822576\addonpy\tests\test_addonpyHelpers.py' exited with '0'...
 test_convert_string_to_boolean (__main__.TestAddonHelper) ... ok
 test_get_basename_and_ext (__main__.TestAddonHelper) ... ok
 
 ----------------------------------------------------------------------
-Ran 2 tests in 0.001s
+Ran 2 tests in 0.000s
 
 OK
 

@@ -72,7 +72,6 @@ class AddonLoader(object):
                 self.recursive_search = False
 
         if self.lazy_load is None:
-            print("value of lazy load config :{0}".format(lazy_load_from_config))
             if lazy_load_from_config:
                 self.log("Picking 'lazy_load' value from config...", "info")
                 self.lazy_load = AddonHelper.convert_string_to_boolean(lazy_load_from_config)
@@ -137,18 +136,6 @@ class AddonLoader(object):
                 self.addon_dirs.append(_abs_temp_path)
 
     # Private
-
-    # def _get_bool_from_config(self, key):
-    #     """
-    #     Convert string config value to boolean
-    #     :param key: key whose value to get from config
-    #     :return: boolean according to str
-    #     :rtype: bool
-    #     """
-    #     if key in self.active_config:
-    #         return AddonHelper.convert_string_to_boolean(self.active_config.get(key))
-    #     else:
-    #         return False
 
     # Getters
 
@@ -346,14 +333,14 @@ class AddonLoader(object):
                 compatible_platforms = addon_info.get('os')
 
                 if compatible_platforms is not None:
-                    if AddonHelper.is_compatible_for_current_platform(compatible_platforms):
+                    if AddonHelper.is_compatible_for_current_platform(self.current_platform, compatible_platforms):
                         # Add in scanned_addons
                         self._update_scanned_addon_list(addon_name, addon_file, addon_info)
                         self._load_module_from_source(addon_name, addon_file, self.lazy_load)
                     else:
                         self.log(">>> Addon '{0}' not compatible with current '{1}' platform."
                                  "supported platforms by this addon '{2}'".
-                                 format(addon_name, self.current_platform, ','.join(compatible_platforms)), "info")
+                                 format(addon_name, self.current_platform, ', '.join(compatible_platforms)), "info")
                 else:
                     # Add in scanned_addons
                     self._update_scanned_addon_list(addon_name, addon_file, addon_info)
