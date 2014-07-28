@@ -346,14 +346,14 @@ class AddonLoader(object):
                 compatible_platforms = addon_info.get('os')
 
                 if compatible_platforms is not None:
-                    if AddonHelper.is_compatible_for_current_platform(compatible_platforms):
+                    if AddonHelper.is_compatible_for_current_platform(self.current_platform, compatible_platforms):
                         # Add in scanned_addons
                         self._update_scanned_addon_list(addon_name, addon_file, addon_info)
                         self._load_module_from_source(addon_name, addon_file, self.lazy_load)
                     else:
                         self.log(">>> Addon '{0}' not compatible with current '{1}' platform."
                                  "supported platforms by this addon '{2}'".
-                                 format(addon_name, self.current_platform, ','.join(compatible_platforms)), "info")
+                                 format(addon_name, self.current_platform, ', '.join(compatible_platforms)), "info")
                 else:
                     # Add in scanned_addons
                     self._update_scanned_addon_list(addon_name, addon_file, addon_info)

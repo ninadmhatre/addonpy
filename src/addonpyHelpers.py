@@ -132,7 +132,7 @@ class AddonHelper(object):
         return os.path.basename(file_path).split('.', 2)
 
     @staticmethod
-    def is_compatible_for_current_platform(eligible_platforms):
+    def is_compatible_for_current_platform(current, eligible_platforms):
         """
         check if current platform is one listed in supplied platforms
         :param eligible_platforms: supplied platform list
@@ -140,7 +140,7 @@ class AddonHelper(object):
         :rtype: bool
         """
 
-        return sys.platform in eligible_platforms
+        return current in eligible_platforms
     
     @staticmethod
     def get_version():
