@@ -3,11 +3,9 @@
 __author__ = 'Ninad'
 
 import logging
-import sys
-
-from addonpy import AddonLoader as loader
-from addonpyExecutor import AddonExecutor as runner
-from ILogger import ILogger
+from addonpy.addonpy import AddonLoader as loader
+from addonpy.addonpyExecutor import AddonExecutor as runner
+from addonpy.ILogger import ILogger
 
 
 class PrintLogger(ILogger):

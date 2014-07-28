@@ -6,10 +6,11 @@ from addonpy.addonpy import AddonLoader as loader
 class TestAddonLoader(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.load_mgr = loader(verbose=False, recursive=False)
+        cls.verbose = False
+        cls.load_mgr = loader(verbose=cls.verbose, recursive=False)
         cls.load_mgr.set_addon_dirs(['./data'])
         cls.load_mgr.load_addons()
-
+        
     def test_get_instance(self):
         # addon_loader = AddonLoader(verbose, logger, recursive, lazy_load)
         # self.assertEqual(expected, addon_loader.get_instance(addon))
@@ -71,7 +72,7 @@ class TestAddonLoader(unittest.TestCase):
         """
         test to check if lazy_load mode runs as expected. addons are only loaded when they are required.
         """
-        self.lazy_load_mgr = loader(verbose=False, recursive=False, lazy_load=True)
+        self.lazy_load_mgr = loader(verbose=self.verbose, recursive=False, lazy_load=True)
         self.lazy_load_mgr.set_addon_dirs(['./data'])
         self.lazy_load_mgr.load_addons()
 
@@ -89,7 +90,7 @@ class TestAddonLoader(unittest.TestCase):
         """
         test to check if recursive module search works as expected.
         """
-        self.recursive_load_mgr = loader(verbose=False, lazy_load=False, recursive=True)
+        self.recursive_load_mgr = loader(verbose=self.verbose, lazy_load=False, recursive=True)
         self.recursive_load_mgr.set_addon_dirs(['./data'])
         self.recursive_load_mgr.load_addons()
 
@@ -103,7 +104,7 @@ class TestAddonLoader(unittest.TestCase):
         """
         test to check if invalid addon raises exception.
         """
-        self.lazy_load_mgr = loader(verbose=False, recursive=True, lazy_load=True)
+        self.lazy_load_mgr = loader(verbose=self.verbose, recursive=True, lazy_load=True)
         self.lazy_load_mgr.set_addon_dirs(['./data'])
         self.lazy_load_mgr.load_addons()
         self.assertRaises(ImportError, self.lazy_load_mgr.get_instance, 'InvalidAddon')
@@ -113,13 +114,14 @@ class TestAddonLoader(unittest.TestCase):
         dir_op = os.path.abspath(os.path.join(os.path.dirname(__file__), 'data'))
         dir_2 = '../tests/data'
 
+        self.load_mgr = loader(verbose=self.verbose, recursive=False)
         self.addon_dirs = list()
-        self.lazy_load_mgr.set_addon_dirs([dir_1])
-        self.assertEqual(self.addon_dirs[0], dir_op)
+        self.load_mgr.set_addon_dirs([dir_1])
+        self.assertEqual(self.load_mgr.addon_dirs[0], dir_op)
 
         self.addon_dirs = list()
-        self.lazy_load_mgr.set_addon_dirs([dir_2])
-        self.assertEqual(self.addon_dirs[0], dir_op)
+        self.load_mgr.set_addon_dirs([dir_2])
+        self.assertEqual(self.load_mgr.addon_dirs[0], dir_op)
 
 if __name__ == '__main__':
     suite = unittest.TestLoader().loadTestsFromTestCase(TestAddonLoader)

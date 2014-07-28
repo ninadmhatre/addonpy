@@ -1,5 +1,4 @@
 __author__ = 'Ninad Mhatre'
-__version__ = '1.0.0'
 
 import os
 import importlib
@@ -8,16 +7,21 @@ from addonpy.addonpyHelpers import AddonHelper
 import sys
 
 
+def get_version():
+    return AddonHelper.get_version()
+
+
 class AddonLoader(object):
     """
     Addon Loader class, scans, validates, loads the addons and used to get the instance of the addons
     """
 
     ext = '.py'
+    current_platform = AddonHelper.get_os()
 
     # Initializer
 
-    def __init__(self, verbose=False, logger=None, recursive=False, lazy_load=False):
+    def __init__(self, verbose=None, logger=None, recursive=None, lazy_load=False):
         """
         Initialize with optional verbose mode (print information) and optional logger (not implemented)
         :param verbose: print loading information
@@ -49,7 +53,27 @@ class AddonLoader(object):
         apply given configuration
         :return: void
         """
-        self.addon_dirs = self.active_config.get('addon_places')
+        dir_list = self.active_config.get('addon_places')
+        self.set_addon_dirs(dir_list)
+
+        recursive_from_config = self.active_config.get('recursive')
+        verbose_from_config = self.active_config.get('verbose')
+
+        if self.verbose is None:
+            if verbose_from_config:
+                self.log("Picking 'verbose' setting from config...")
+                self.verbose = AddonHelper.convert_string_to_boolean(verbose_from_config)
+            else:
+                self.verbose = False
+
+        if self.recursive_search is None:
+            if recursive_from_config:
+                self.log("Picking 'recursive' search value from config...")
+                self.recursive_search = AddonHelper.convert_string_to_boolean(recursive_from_config)
+            else:
+                self.recursive_search = False
+
+        self.lazy_load = False
 
     def print_current_config(self):
         self.log("Recursive addon search is: {0}".format('On' if self.recursive_search else 'Off'))
@@ -316,4 +340,4 @@ class AddonLoader(object):
                 self.logger.fatal(message)
 
 if __name__ == '__main__':
-    print("use this as module, basic help: import addonpyLite")
+    print("use this as module, basic help: import addonpy.addonpyLite")
