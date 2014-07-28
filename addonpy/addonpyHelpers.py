@@ -6,6 +6,10 @@ import os
 import sys
 
 
+def get_version():
+    return AddonHelper.get_version()
+
+
 class AddonHelper(object):
     """
     Small utility class to read json and info files
@@ -53,7 +57,7 @@ class AddonHelper(object):
         return data
 
     @staticmethod
-    def walk_dir(directory, ext=None, recursive=False, skip_list=list()):
+    def walk_dir(directory, ext=[], recursive=False, skip_list=list()):
         """
         walk directory path to look for file with specific extension while optionally ignoring specific files
         :param directory: directory path to walk
@@ -73,17 +77,24 @@ class AddonHelper(object):
                 for file in files:
                     if file in skip_list:
                         continue
-
-                    if ext is None:
+                        
+                    abs_file = os.path.join(abs_dir_path, file)
+                    
+                    if len(ext) == 0:
                         # append all files
-                        file_list.append(os.path.join(abs_dir_path, file))
+                        file_list.append(abs_file)
                     else:
-                        if file.endswith(ext):
-                            file_list.append(os.path.join(abs_dir_path, file))
+                        try:
+                            n, e = AddonHelper.get_basename_and_ext(abs_file)
+                        except ValueError:
+                            print("Error: Failed to retrieve basename and extension from file '{0}'. Ignoring...".
+                                  format(abs_file))
+                        if e in ext:
+                            file_list.append(abs_file)
             depth += 1
 
         return file_list
-
+     
     @staticmethod
     def add_to_module_search_dir(file_path):
         """
@@ -150,3 +161,17 @@ class AddonHelper(object):
                 return version
         else:
             return __version__
+
+    @staticmethod
+    def get_os():
+        actual = sys.platform
+        derived_os = ""
+
+        if actual.startswith('linux'):
+            derived_os = "linux"
+        elif actual.startswith('win'):
+            derived_os = "win"
+        elif actual.startswith('darwin'):
+            derived_os = "osx"
+
+        return derived_os

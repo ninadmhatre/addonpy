@@ -6,9 +6,9 @@
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
 <tr bgcolor="#7799ee">
 <td valign=bottom>&nbsp;<br>
-<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>addonpyHelpers</strong></big></big> (version 0.7.0)</font></td
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>addonpyHelpers</strong></big></big> (version 1.0.0)</font></td
 ><td align=right valign=bottom
-><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:///C:/users/ninad/pycharmprojects/plugable_arch/src/addonpyhelpers.py">c:\users\ninad\pycharmprojects\plugable_arch\src\addonpyhelpers.py</a></font></td></tr></table>
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:///C:/users/ninad/pycharmprojects/plugable_arch/package-20147231101/addonpy/addonpyhelpers.py">c:\users\ninad\pycharmprojects\plugable_arch\package-20147231101\addonpy\addonpyhelpers.py</a></font></td></tr></table>
     <p></p>
 <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
@@ -58,6 +58,8 @@
 :param&nbsp;file_path:&nbsp;absolute&nbsp;file&nbsp;path<br>
 :return:&nbsp;list&nbsp;with&nbsp;basename&nbsp;of&nbsp;file&nbsp;and&nbsp;extension</tt></dd></dl>
 
+<dl><dt><a name="AddonHelper-get_version"><strong>get_version</strong></a>()</dt></dl>
+
 <dl><dt><a name="AddonHelper-is_compatible_for_current_platform"><strong>is_compatible_for_current_platform</strong></a>(eligible_platforms)</dt><dd><tt>check&nbsp;if&nbsp;current&nbsp;platform&nbsp;is&nbsp;one&nbsp;listed&nbsp;in&nbsp;supplied&nbsp;platforms<br>
 :param&nbsp;eligible_platforms:&nbsp;supplied&nbsp;platform&nbsp;list<br>
 :return:&nbsp;true&nbsp;or&nbsp;false<br>
@@ -79,7 +81,7 @@
 :return:&nbsp;file&nbsp;contents&nbsp;as&nbsp;string<br>
 :rtype:&nbsp;str</tt></dd></dl>
 
-<dl><dt><a name="AddonHelper-walk_dir"><strong>walk_dir</strong></a>(directory, ext=None, recursive=False, skip_list=[])</dt><dd><tt>walk&nbsp;directory&nbsp;path&nbsp;to&nbsp;look&nbsp;for&nbsp;file&nbsp;with&nbsp;specific&nbsp;extension&nbsp;while&nbsp;optionally&nbsp;ignoring&nbsp;specific&nbsp;files<br>
+<dl><dt><a name="AddonHelper-walk_dir"><strong>walk_dir</strong></a>(directory, ext=[], recursive=False, skip_list=[])</dt><dd><tt>walk&nbsp;directory&nbsp;path&nbsp;to&nbsp;look&nbsp;for&nbsp;file&nbsp;with&nbsp;specific&nbsp;extension&nbsp;while&nbsp;optionally&nbsp;ignoring&nbsp;specific&nbsp;files<br>
 :param&nbsp;directory:&nbsp;directory&nbsp;path&nbsp;to&nbsp;walk<br>
 :param&nbsp;ext:&nbsp;file&nbsp;extension&nbsp;to&nbsp;get&nbsp;(if&nbsp;no&nbsp;extension,&nbsp;then&nbsp;its&nbsp;returned)<br>
 :param&nbsp;recursive:&nbsp;only&nbsp;consider&nbsp;current&nbsp;directory,&nbsp;do&nbsp;not&nbsp;walk&nbsp;recursively<br>

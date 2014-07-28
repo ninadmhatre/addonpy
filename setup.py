@@ -1,8 +1,8 @@
-from setuptools import setup, find_packages
+from setuptools import setup
 
 setup(
     name='addonpy',
-    version='0.8.1',
+    version='0.9.1',
     author='Ninad Mhatre',
     author_email='ninad.mhatre@gmail.com',
     packages=['addonpy',

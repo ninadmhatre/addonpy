@@ -1,11 +1,17 @@
 #
-# This is pretty beta stage of this script. It works if you are not trying to break it.
+# This is pretty beta stage of this script. It works if you are not trying to break it :)
 # Requires: addonpy to be installed
 # - Very little testing done
 # - No test cases...
 # - Find any issue? report on GitHub
 
+# Changes:
+#   0.1 : 18-Jul-2014 : Initial version
+#   0.2 : 23-Jul-2014 : Added support for user specific templates
+#                       Bit of documentation
+
 __author__ = 'Ninad Mhatre'
+__version__ = '0.2.0'
 
 import os
 from os.path import abspath, join, dirname
@@ -51,14 +57,15 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--name', '-n', help="Provide name for Addon e.g 'Test' or 'TestAddon'")
 parser.add_argument('--conf', '-c', help="Provide path to config file")
 parser.add_argument('--noinfo', '-ni', help="[Optional] Do not generate .info file for addon", action='store_true')
-#parser.add_argument('--info-template', '-it', help="[Optional] Path to info template file")  # NOT USED
-#parser.add_argument('--addon-template', '-at', help="[Optional] Path to addon template file")  # NOT USED
+parser.add_argument('--info-template', '-it', help="[Optional] Path to info template file")
+parser.add_argument('--addon-template', '-at', help="[Optional] Path to addon template file")
 parser.add_argument('--type', '-t', help="[Optional] Override Type specified in config file")
 parser.add_argument('--desc', '-d', help="[Optional] Override Description specified in config file")
 parser.add_argument('--author', '-a', help="[Optional] Override Author specified in config file")
 parser.add_argument('--outdir', '-o', help="[Optional] Provide where to create files. Default: current directory",
                     default=abspath('.'))
 parser.add_argument('--version', '-v', help="[Optional] Provide version number for addon. Default: 1.0.0")
+parser.add_argument('--fullhelp', '-fh', help="Show help with some examples", action='store_true')
 
 options = parser.parse_args()
 
@@ -88,7 +95,67 @@ def _create_file(file_name, contents):
         write.write(contents)
 
 
+def display_help():
+    x = 'addon_generator'
+
+    print("""
+
+    Desc  : Generate addon from given or default template (VERSION : {1})
+
+    Usage : Run '{0} -h' for parameters related info
+
+    E.g.  :
+
+    1. {0} -n Test -c ./template.conf
+       - Create 'TestAddon.py' and 'TestAddon.info' in current directory with 'DEFAULT' templates using values specified
+         in 'template.conf' in current file.
+
+    2. {0} -n Test -c ./template.conf -o /tmp
+       - Same as #1, but files are created in /tmp
+
+    3. {0} -n Test -c ./template.conf -ni
+       - Same as #1, but .info file is not created
+
+    4. {0} -n Test -c ./template.conf --type X --desc 'Abcd X' --author 'X-1 Team' --version '1.0-beta'
+       - Same as #1, but overrides Type, Author & Version values from '.conf' file. '--desc' is always picked from
+         argument.
+
+    5. {0} -n Test -c ./template.conf -ni -it /tmp/info.template -at /tmp/addon.x
+       - Same as #1, but info template and addon template are specified by user. User can choose to specify either, both
+       or none.
+
+    Note: Template extensions DO NOT matter!
+
+    Variables:
+
+       Common for Addon & .info:
+            $ADDON_NAME
+            $AUTHOR
+
+       Addon Template:
+            $AUTHOR
+            $START_FUNCTION
+            $STOP_FUNCTION
+            $EXECUTE_FUNCTION
+            OTHER_FUNCTIONS - Defined in template.conf as CSV and these will be created as functions in generated file.
+
+       Info Templates:
+            $UUID  - Auto generated
+            $HELP_URL - Can have '$ADDON_NAME' as part of URL
+            $TYPE
+            $DESCRIPTION
+            $START_SEQUENCE
+            $STOP_SEQUENCE
+            $VERSION
+    """.format(x, __version__))
+
+
 def validate():
+
+    if options.fullhelp:
+        display_help()
+        sys.exit(0)
+
     if options.name is None:
         parser.print_help()
         sys.exit(9)
@@ -104,6 +171,26 @@ def validate():
         print("Error: Output directory '{0}' does not exist".format(options.outdir))
         sys.exit(9)
 
+    if options.info_template:
+        if not os.path.isfile(options.info_template):
+            print("Error: Info file template '{0}' mentioned not found".format(options.info_template))
+            sys.exit(9)
+        else:
+            global INFO_TEMPLATE
+            INFO_TEMPLATE = helper.read_file(options.info_template)
+    else:
+        options.info_template = "Default"
+
+    if options.addon_template:
+        if not os.path.isfile(options.addon_template):
+            print("Error: Info file template '{0}' mentioned not found".format(options.addon_template))
+            sys.exit(9)
+        else:
+            global ADDON_TEMPLATE
+            ADDON_TEMPLATE = helper.read_file(options.addon_template)
+    else:
+        options.addon_template = "Default"
+
     print("""
     Validation Finished...
 
@@ -112,11 +199,15 @@ def validate():
     Generate .info file : {2}
     config file         : {3}
     Output directory    : {4}
+    .info template      : {5}
+    addon template      : {6}
     """.format(options.name,
                options.desc,
                "Yes" if not options.noinfo else "No",
                options.conf,
-               options.outdir))
+               options.outdir,
+               options.info_template,
+               options.addon_template))
 
 
 def parse_config():
@@ -131,6 +222,12 @@ def parse_config():
 
 
 def generate_addon(cf):
+    """
+    addon templatizer. Supports following variables
+    $AUTHOR, $ADDON_NAME, $START_FUNCTION, $STOP_FUNCTION, $EXECUTE_FUNCTION
+    :param cf: config file
+    :return: text replaced file with values from config file
+    """
     addon_template = ADDON_TEMPLATE
     addon_template = addon_template.replace('$AUTHOR', _get_author(cf))
     addon_template = addon_template.replace('$ADDON_NAME', options.name)
@@ -149,6 +246,12 @@ def generate_addon(cf):
 
 
 def generate_info(cf):
+    """
+    addon template, supports following variables
+    $UUID, $HELP_URL, $ADDON_NAME, $TYPE, $DESCRIPTION, $START_SEQUENCE, $STOP_SEQUENCE, $VERSION, $AUTHOR
+    :param cf: config file with values for above variables
+    :return: templatized file.
+    """
     if options.noinfo:
         print("Info file will not be generated...")
         return None
@@ -230,6 +333,7 @@ def _get_sequence(cf, which):
 
     if val and val is not None:
         return _convert_to_list_str(val)
+
 
 def _convert_to_list_str(sequence):
     x = '['

@@ -1,4 +1,6 @@
 {
     "required_functions": ["start", "stop", "execute", "__addon__"],
-    "addon_places": [".\\Default"]
+    "addon_places": ["./Default"],
+    "recursive": "true",
+    "lazy_load": "yes"
 }

@@ -1,5 +1,10 @@
 __author__ = 'Ninad Mhatre'
-__version__ = '0.1.0'
+
+from .addonpyHelpers import AddonHelper
+
+
+def get_version():
+    return AddonHelper.get_version()
 
 
 class AddonExecutor(object):

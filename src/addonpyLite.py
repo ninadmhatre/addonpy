@@ -1,11 +1,15 @@
 __author__ = 'Ninad Mhatre'
-__version__ = '1.0.0'
 
 import os
 import importlib
 from datetime import datetime
-from addonpy.addonpyHelpers import AddonHelper
 import sys
+
+from .addonpyHelpers import AddonHelper
+
+
+def get_version():
+    return AddonHelper.get_version()
 
 
 class AddonLoader(object):
@@ -14,10 +18,10 @@ class AddonLoader(object):
     """
 
     ext = '.py'
+    current_platform = AddonHelper.get_os()
 
     # Initializer
-
-    def __init__(self, verbose=False, logger=None, recursive=False, lazy_load=False):
+    def __init__(self, verbose=None, logger=None, recursive=None, lazy_load=False):
         """
         Initialize with optional verbose mode (print information) and optional logger (not implemented)
         :param verbose: print loading information
@@ -49,7 +53,26 @@ class AddonLoader(object):
         apply given configuration
         :return: void
         """
-        self.addon_dirs = self.active_config.get('addon_places')
+        self.set_addon_dirs(self.active_config.get('addon_places'))
+
+        recursive_from_config = self.active_config.get('recursive')
+        verbose_from_config = self.active_config.get('verbose')
+
+        if self.recursive_search is None:
+            if recursive_from_config:
+                self.log("Picking 'recursive' search value from config...", "info")
+                self.recursive_search = AddonHelper.convert_string_to_boolean(recursive_from_config)
+            else:
+                self.recursive_search = False
+
+        self.lazy_load = False
+
+        if self.verbose is None:
+            if verbose_from_config:
+                self.log("Picking 'verbose' setting from config...", "info")
+                self.verbose = AddonHelper.convert_string_to_boolean(verbose_from_config)
+            else:
+                self.verbose = False
 
     def print_current_config(self):
         self.log("Recursive addon search is: {0}".format('On' if self.recursive_search else 'Off'))
@@ -64,6 +87,14 @@ class AddonLoader(object):
         """
         self.logger = logger
 
+    def set_recursive_search(self, state):
+        """
+        Change recursive search mode for addons, Recommended: Either set while initializing or leave it default
+        :param state: true or false
+        :return: void
+        """
+        self.recursive_search = AddonHelper.convert_string_to_boolean(state)
+
     def set_addon_dirs(self, dirs):
         """
         override the default config value to look for addons
@@ -76,7 +107,12 @@ class AddonLoader(object):
             self.log(error_message, 'error')
             raise TypeError(error_message)
 
-        self.addon_dirs = dirs
+        self.addon_dirs = list()
+
+        for dir_name in dirs:
+            _abs_temp_path = self._get_abspath(dir_name, True)
+            if os.path.isdir(_abs_temp_path):
+                self.addon_dirs.append(_abs_temp_path)
 
     # Getters
 
@@ -90,8 +126,14 @@ class AddonLoader(object):
         if addon_name.endswith("Addon"):
             if addon_name in sys.modules:
                 _temp = sys.modules.get(addon_name, None)
-                _temp_class = _temp.__dict__.get(addon_name)
-                return _temp_class()
+                if _temp is not None:
+                    _temp_class = _temp.__dict__.get(addon_name)
+                    return _temp_class()
+                else:
+                    return None
+            else:
+                print("** Are you running this with Lazy load? make sure all modules are already loaded! **")
+                return None  # silent
         else:
             return None
 
@@ -183,18 +225,28 @@ class AddonLoader(object):
             return
 
         for dir_name in addon_conf.get('addon_places'):
-            if dir_name.startswith('.') or dir_name.startswith('..'):
-                self.log("Addon directory(ies) mentioned as relative paths, converting to absolute paths...")
-                _abs_temp_path = os.path.abspath(os.path.join(self.init_dir, dir_name))
-            else:
-                # Its not a relative path. you cannot use $ENV in loader.info file, rely on set_addon_dirs method...
-                _abs_temp_path = dir_name
-
+            _abs_temp_path = self._get_abspath(dir_name, True)
             if os.path.isdir(_abs_temp_path):
                 self.addon_dirs.append(_abs_temp_path)
 
         addon_conf['addon_places'] = self.addon_dirs
         self.active_config = addon_conf
+
+    def _get_abspath(self, fpath, verbose):
+        """
+        get absolute path from relative path
+        :param fpath: relative path
+        :param verbose: print info to screen?
+        :return: absolute path
+        """
+        if fpath.startswith('.') or fpath.startswith('..'):
+            if verbose:
+                self.log("Addon directory mentioned as relative, converting '{0}' as absolute path...".format(fpath))
+            _abs_temp_path = os.path.abspath(os.path.join(self.init_dir, fpath))
+            self.log("absolute path '{0}'".format(_abs_temp_path))
+        else:
+            _abs_temp_path = fpath
+        return _abs_temp_path
 
     def _scan_for_addons(self):
         """
