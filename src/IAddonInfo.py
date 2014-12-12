@@ -9,7 +9,7 @@ class IAddonInfo(object):
     Base class for all addons, this provides basic meta information retrieval and may be extended to provide some
     common functionality for all addons
     """
-    __t = namedtuple('AddonInfo', 'name, version, type, uuid, type_desc')
+    __t = namedtuple('AddonInfo', 'name type uuid version')
 
     def __init__(self):
         """
@@ -27,7 +27,6 @@ class IAddonInfo(object):
         return self.__t(
             name=self.get_name(),
             type=self.get_type(),
-            type_desc=self.get_type_desc(),
             uuid=self.get_uuid(),
             version=self.get_version()
         )._asdict()
