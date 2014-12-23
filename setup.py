@@ -15,10 +15,6 @@ setup(
     description='A simple addon/plug-in module',
     license='MIT',
     packages=find_packages(exclude=EXCLUDE_FROM_PACKAGES),
-    package_data={'': ['*.version', '*.conf' '*.info']},
-    data_files=[
-        ('addonpy', ['.version'])
-    ],
     scripts=['addonpy/scripts/addon_generator.py'],
     classifiers=[
         'Development Status :: 4 - Beta',
