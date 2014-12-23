@@ -1,4 +1,5 @@
 __author__ = 'Ninad Mhatre'
+__version__ = '1.0.9'
 
 import os
 import importlib
@@ -13,7 +14,7 @@ except ImportError:
 
 
 def get_version():
-    return AddonHelper.get_version()
+    return __version__
 
 
 class AddonLoader(object):
