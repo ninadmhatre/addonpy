@@ -4,7 +4,7 @@ __author__ = 'Ninad'
 # rename existing package directory
 # copy files...
 # -- src/*.py
-#  -- example/
+# -- example/
 #  -- docs/
 #  -- tests/
 #  -- setup.py
@@ -22,14 +22,13 @@ if len(sys.argv) == 1:
 else:
     version_user = sys.argv[1].rstrip()
 
-
 x_time = time.localtime()
-_SUFFIX = "{0}{1}{2}{3}{4}{5}".format(x_time.tm_year,
-                                      x_time.tm_mon,
-                                      x_time.tm_mday,
-                                      x_time.tm_hour,
-                                      x_time.tm_min,
-                                      x_time.tm_sec)
+_SUFFIX = "{0}{1}{2}-{3:02d}{4:02d}{5:02d}".format(x_time.tm_year,
+                                                   x_time.tm_mon,
+                                                   x_time.tm_mday,
+                                                   x_time.tm_hour,
+                                                   x_time.tm_min,
+                                                   x_time.tm_sec)
 
 PACKAGE_DIR = 'package-{0}'.format(_SUFFIX)
 
@@ -100,6 +99,7 @@ os.system("python tests/run_tests.py local > tests/test.out 2>&1")
 
 sys.exit(0)
 
+os.chdir('..')
 print("Create package...")
 os.system("python setup.py sdist")
 

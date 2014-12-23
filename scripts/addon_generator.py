@@ -9,9 +9,10 @@
 #   0.1 : 18-Jul-2014 : Initial version
 #   0.2 : 23-Jul-2014 : Added support for user specific templates
 #                       Bit of documentation
+#   0.4 : 22-Dec-2014 : Added Default config template
 
 __author__ = 'Ninad Mhatre'
-__version__ = '0.2.0'
+__version__ = '0.4.0'
 
 import os
 from os.path import abspath, join, dirname
@@ -19,7 +20,21 @@ import sys
 import argparse
 from addonpy.addonpyHelpers import AddonHelper as helper
 
-INFO_TEMPLATE = """{
+CONF_TEMPLATE = {
+    "HELP_URL": "http://www.google.com/helppage/$ADDON_NAME",
+    "TYPE": "DEFAULT",
+    "AUTHOR": "<Please Specify Author>",
+    "START_SEQUENCE": "start, execute",
+    "STOP_SEQUENCE": "stop",
+    "VERSION": "1.0.0",
+    "START_FUNCTION": "start",
+    "STOP_FUNCTION": "stop",
+    "EXECUTE_FUNCTION": "execute",
+    "OTHER_FUNCTIONS": ""
+}
+
+INFO_TEMPLATE = """
+{
     "uuid": "$UUID",
     "name": "$ADDON_NAME",
     "type": "$TYPE",
@@ -32,7 +47,8 @@ INFO_TEMPLATE = """{
 }
 """
 
-ADDON_TEMPLATE = """__author__ = '$AUTHOR'
+ADDON_TEMPLATE = """
+__author__ = '$AUTHOR'
 
 from addonpy.IAddonInfo import IAddonInfo
 
@@ -55,7 +71,7 @@ class $ADDON_NAME(IAddonInfo):
 parser = argparse.ArgumentParser()
 
 parser.add_argument('--name', '-n', help="Provide name for Addon e.g 'Test' or 'TestAddon'")
-parser.add_argument('--conf', '-c', help="Provide path to config file")
+parser.add_argument('--conf', '-c', help="[Optional] Provide path to config file")
 parser.add_argument('--noinfo', '-ni', help="[Optional] Do not generate .info file for addon", action='store_true')
 parser.add_argument('--info-template', '-it', help="[Optional] Path to info template file")
 parser.add_argument('--addon-template', '-at', help="[Optional] Path to addon template file")
@@ -106,9 +122,9 @@ def display_help():
 
     E.g.  :
 
-    1. {0} -n Test -c ./template.conf
-       - Create 'TestAddon.py' and 'TestAddon.info' in current directory with 'DEFAULT' templates using values specified
-         in 'template.conf' in current file.
+    1. {0} -n Test
+       - Create 'TestAddon.py' and 'TestAddon.info' in current directory with 'DEFAULT' templates using 'DEFAULT' values
+         set. (* check below for defaults)
 
     2. {0} -n Test -c ./template.conf -o /tmp
        - Same as #1, but files are created in /tmp
@@ -147,7 +163,33 @@ def display_help():
             $START_SEQUENCE
             $STOP_SEQUENCE
             $VERSION
-    """.format(x, __version__))
+
+    Default Templates:
+
+        1. INFO: <This is how the <ADDON>.info file would look>
+        -------------------------------------------------------
+            {2}
+
+        2. ADDON: <This is how <ADDON>.py file would look.
+        --------------------------------------------------
+            {3}
+
+        3. CONFIG: <This is dict / JSON, if you want to modify it just copy to file and verify its valid JSON.>
+        -------------------------------------------------------------------------------------------------------
+
+            {{
+                "HELP_URL": "http://www.google.com/helppage/$ADDON_NAME",
+                "TYPE": "DEFAULT",
+                "AUTHOR": "<Please Specify Author>",
+                "START_SEQUENCE": "start, execute",
+                "STOP_SEQUENCE": "stop",
+                "VERSION": "1.0.0",
+                "START_FUNCTION": "start",
+                "STOP_FUNCTION": "stop",
+                "EXECUTE_FUNCTION": "execute",
+                "OTHER_FUNCTIONS": ""
+            }}
+    """.format(x, __version__, INFO_TEMPLATE, ADDON_TEMPLATE))
 
 
 def validate():
@@ -164,8 +206,8 @@ def validate():
         options.name += "Addon"
 
     if options.conf is None or not os.path.isfile(options.conf):
-        print("Error: Please provide config file argument! or mentioned file does not exist!")
-        sys.exit(9)
+        print("Warn: Config template not provided, Default will be used!")
+        options.conf = "Default"
 
     if options.outdir is not None and not os.path.isdir(options.outdir):
         print("Error: Output directory '{0}' does not exist".format(options.outdir))
@@ -212,6 +254,9 @@ def validate():
 
 def parse_config():
 
+    if options.conf == "Default":
+        return CONF_TEMPLATE
+
     try:
         config = helper.parse_info_file(options.conf)
     except ValueError:
@@ -235,7 +280,7 @@ def generate_addon(cf):
     addon_template = addon_template.replace('$STOP_FUNCTION', cf.get('STOP_FUNCTION', '<INVALID>'))
     addon_template = addon_template.replace('$EXECUTE_FUNCTION', cf.get('EXECUTE_FUNCTION', '<INVALID>'))
 
-    text = "\n\n    def {0}(self):\n        raise NotImplemented"
+    text = "\n    def {0}(self):\n        raise NotImplemented"
 
     if cf.get('OTHER_FUNCTIONS'):
         for function in cf.get('OTHER_FUNCTIONS').split(','):

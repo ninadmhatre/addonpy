@@ -1,15 +1,20 @@
 __author__ = 'Ninad Mhatre'
+__version__ = '1.0.9'
 
 import os
 import importlib
 from datetime import datetime
 import sys
 
-from .addonpyHelpers import AddonHelper
+try:
+    from addonpy.addonpyHelpers import AddonHelper
+except ImportError:
+    # Hack for Py2
+    from .addonpyHelpers import  AddonHelper
 
 
 def get_version():
-    return AddonHelper.get_version()
+    return __version__
 
 
 class AddonLoader(object):
@@ -34,6 +39,8 @@ class AddonLoader(object):
         self.scanned_addons = dict()
         self.loaded_addons = dict()
         self.active_config = dict()
+        self.addon_id = "Addon"
+        self.ignore_addon_id = False
         self.current_dir = os.path.abspath('.')
 
         # Required variables supplied by caller
@@ -114,16 +121,53 @@ class AddonLoader(object):
             if os.path.isdir(_abs_temp_path):
                 self.addon_dirs.append(_abs_temp_path)
 
+    def set_addon_identifier(self, identifier, ignore_suffix=False):
+        """
+        Set what should be suffix of addon, till 0.9.2 default suffix was "Addon"
+        :param identifier: Specify suffix such as Plugin, Module etc.. Can be "None" if ignore_suffix = True
+        :param ignore_suffix: if True, ignore suffix all .info file would be loaded.
+        """
+
+        if identifier is None and ignore_suffix:
+            self.log("Setting Identifier to None, i.e. all .info files will be considered as Addons")
+            self.addon_id = None
+            self.ignore_addon_id = True
+        else:
+            if identifier is None:
+                self.log("Setting Identifier to Default i.e. 'Addon', Invalid identifier provided", 'warn')
+                self.addon_id = "Addon"
+                self.ignore_addon_id = False
+            else:
+                self.log("Setting Identifier to '{0}'".format(identifier))
+                self.addon_id = identifier
+                self.ignore_addon_id = False
+
+    def set_addon_methods(self, method_list):
+        """
+        Specify required methods in Addon
+        :param method_list: list of required methods
+        """
+        if not isinstance(method_list, list) or len(method_list) == 0:
+            error_message = 'set_addon_methods: methods must be a list with at least 1 method'
+            self.log(error_message, 'error')
+            raise TypeError(error_message)
+
+        # There no way to find if user will provide right list here, so applying it as is.
+        # This overrides the info in "addon-loader.info" file
+
+        self.log("Overwriting 'required_functions' with list specified by user", 'warn')
+        self.active_config['required_functions'] = method_list
+
     # Getters
 
     @staticmethod
-    def get_loaded_addon_instance(addon_name):
+    def get_loaded_addon_instance(addon_name, addon_identifier='Addon'):
         """
         Use to for nested addon calls.
         :param addon_name: addon to load
         :return: addon instance
         """
-        if addon_name.endswith("Addon"):
+        if addon_name.endswith(addon_identifier):
             if addon_name in sys.modules:
                 _temp = sys.modules.get(addon_name, None)
                 if _temp is not None:
@@ -224,10 +268,15 @@ class AddonLoader(object):
             self.active_config = addon_conf
             return
 
-        for dir_name in addon_conf.get('addon_places'):
-            _abs_temp_path = self._get_abspath(dir_name, True)
-            if os.path.isdir(_abs_temp_path):
-                self.addon_dirs.append(_abs_temp_path)
+        addon_places = addon_conf.get('addon_places')
+
+        if addon_places is not None:
+            for dir_name in addon_conf.get('addon_places'):
+                _abs_temp_path = self._get_abspath(dir_name, True)
+                if os.path.isdir(_abs_temp_path):
+                    self.addon_dirs.append(_abs_temp_path)
+        else:
+            self.addon_dirs.append(os.path.abspath(os.path.curdir))
 
         addon_conf['addon_places'] = self.addon_dirs
         self.active_config = addon_conf
@@ -260,8 +309,9 @@ class AddonLoader(object):
             for addon_file in possible_addons:
                 addon_name, ext = AddonHelper.get_basename_and_ext(addon_file)
 
-                if not addon_name.endswith('Addon'):
-                    self.log(">> Not loading '{0}' as file name does not end with 'Addon'".format(addon_file))
+                if not self.ignore_addon_id and not addon_name.endswith(self.addon_id):
+                    self.log(">> Not loading '{0}' as file name does not end with '{0}'".format(addon_file,
+                                                                                                self.addon_id))
                     continue
 
                 self.scanned_addons[addon_name] = {'FILE': addon_file, 'META': dict(), 'MODULE': None}
@@ -314,6 +364,8 @@ class AddonLoader(object):
         passed = 0
         failed = 0
 
+        failed_list = list()
+
         for addon in self.scanned_addons.keys():
             total += 1
             error_cnt = 0
@@ -325,15 +377,19 @@ class AddonLoader(object):
             for expected_function in self.active_config.get('required_functions'):
                 if expected_function not in all_functions:
                     error_cnt += 1
-                    self.log("     Required method: '{0}' not found!".format(expected_function), 'error')
+                    self.log("     {0} : Required method: '{1}' not found!".format(addon, expected_function), 'error')
 
             if error_cnt > 0:
                 self.log("Failed! Unloading addon...".format(addon), 'error')
-                self.scanned_addons.__delitem__(addon)
+                # self.scanned_addons.pop(addon, None)
+                failed_list.append(addon)
                 failed += 1
             else:
                 passed += 1
                 self.log('Passed...')
+
+        if len(failed_list) > 0:
+            [self.scanned_addons.pop(_addon, None) for _addon in failed_list]
 
         self.log("Total '{0}' addons found. passed validation: {1} failed validations: {2}".
                  format(total, passed, failed))
@@ -358,6 +414,8 @@ class AddonLoader(object):
         else:
             if level == 'info':
                 self.logger.info(message)
+            elif level == 'warn':
+                self.logger.warn(message)
             elif level == 'debug':
                 self.logger.debug(message)
             elif level == 'trace':
