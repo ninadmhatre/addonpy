@@ -1,24 +1,25 @@
-from setuptools import setup
+from setuptools import setup, find_packages
+from addonpy.addonpyHelpers import AddonHelper
+
+version = AddonHelper.get_version()
+
+EXCLUDE_FROM_PACKAGES = ['addonpy.docs',
+                         'addonpy.scripts']
 
 setup(
     name='addonpy',
-    version='1.0.8',
+    version=version,
+    url='https://github.com/ninadmhatre/addonpy/wiki',
     author='Ninad Mhatre',
     author_email='ninad.mhatre@gmail.com',
-    packages=['addonpy',
-              'addonpy.tests'],
-    package_data={'addonpy.tests': ['*.bat', '*.txt', '*.py'],
-                  'addonpy.tests.data': ['*.info', '*.py'],
-                  'addonpy.tests.data.sub': ['*.info', '*.py'],
-                  'addonpy.examples': ['*.txt', '*.info', '*.py'],
-                  'addonpy.docs': ['*.html'],
-                  'addonpy': ['.version'],
-                  'addonpy.scripts': ['*.conf', '*.py']},
-    include_package_data=True,
-    url='https://github.com/ninadmhatre/addonpy/wiki',
-    license='MIT',
     description='A simple addon/plug-in module',
-    scripts=['addonpy/scripts/addon_generator.py', 'addonpy/scripts/template.conf'],
+    license='MIT',
+    packages=find_packages(exclude=EXCLUDE_FROM_PACKAGES),
+    package_data={'': ['*.version', '*.conf' '*.info']},
+    data_files=[
+        ('addonpy', ['.version'])
+    ],
+    scripts=['addonpy/scripts/addon_generator.py'],
     classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',

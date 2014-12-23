@@ -97,6 +97,8 @@ os.chdir(PKG_DIR)
 print("Running tests... locally")
 os.system("python tests/run_tests.py local > tests/test.out 2>&1")
 
+sys.exit(0)
+
 os.chdir('..')
 print("Create package...")
 os.system("python setup.py sdist")
